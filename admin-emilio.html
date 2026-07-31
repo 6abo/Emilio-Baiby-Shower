@@ -299,8 +299,9 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
     <script>
-        // Configuración
-        const ADMIN_PASSWORD = 'emilio2026'; // Cambia esto por una contraseña más segura
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwh7f2wqGOaUSZTis-U1TZ0h3I1X7i_1Zu2uG55kXU5l1buRYXNvFIW7D5qKWcTk4OM/exec'; // <--- Reemplaza esto
+
+        const ADMIN_PASSWORD = 'emilio2026';
         const passwordInput = document.getElementById('passwordInput');
         const loginBtn = document.getElementById('loginBtn');
         const errorMessage = document.getElementById('errorMessage');
@@ -315,16 +316,13 @@
         
         let isLoggedIn = false;
         
-        // Verificar si ya está logueado
         window.addEventListener('load', () => {
-            const sessionPassword = sessionStorage.getItem('adminSessionEmilio');
-            if (sessionPassword === ADMIN_PASSWORD) {
+            if (sessionStorage.getItem('adminSessionEmilio') === ADMIN_PASSWORD) {
                 isLoggedIn = true;
                 showAdminPanel();
             }
         });
         
-        // Login
         loginBtn.addEventListener('click', () => {
             if (passwordInput.value === ADMIN_PASSWORD) {
                 sessionStorage.setItem('adminSessionEmilio', ADMIN_PASSWORD);
@@ -338,12 +336,9 @@
         });
         
         passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                loginBtn.click();
-            }
+            if (e.key === 'Enter') loginBtn.click();
         });
         
-        // Logout
         logoutBtn.addEventListener('click', () => {
             sessionStorage.removeItem('adminSessionEmilio');
             isLoggedIn = false;
@@ -358,24 +353,36 @@
             loadResponses();
         }
         
-        // Cargar respuestas
-        function loadResponses() {
+        // Obtener respuestas desde la nube
+        async function loadResponses() {
             try {
-                const data = localStorage.getItem('emilio-shower-all-responses');
-                const responses = data ? JSON.parse(data) : {};
+                const response = await fetch(SCRIPT_URL);
+                const responses = await response.json();
+                
+                // Guardar backup local por si se necesita exportar
+                localStorage.setItem('emilio-shower-cloud-backup', JSON.stringify(responses));
                 
                 renderResponses(responses);
                 renderStats(responses);
             } catch (e) {
-                console.error('Error cargando respuestas:', e);
+                console.error('Error:', e);
+                // Si falla la red, cargar el último estado conocido
+                const backup = localStorage.getItem('emilio-shower-cloud-backup');
+                if (backup) {
+                    const parsed = JSON.parse(backup);
+                    renderResponses(parsed);
+                    renderStats(parsed);
+                } else {
+                    responsesBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #c9755f;">Error conectando con la base de datos...</td></tr>';
+                }
             }
         }
         
         function renderStats(responses) {
             const entries = Object.values(responses);
             const attending = entries.filter(r => r.isAttending).length;
-            const notAttending = entries.filter(r => !r.isAttending).length;
-            const total = attending + notAttending;
+            const notAttending = entries.filter(r => r.isAttending === false || r.isAttending === 'false').length;
+            const total = entries.length;
             
             statsContainer.innerHTML = `
                 <div class="stat-card">
@@ -395,18 +402,20 @@
         
         function renderResponses(responses) {
             const entries = Object.entries(responses);
-            
             if (entries.length === 0) {
                 responsesBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px;">Aún no hay respuestas</td></tr>';
                 return;
             }
             
+            // Ordenar por fecha (más reciente primero)
+            entries.sort((a, b) => new Date(b[1].timestamp) - new Date(a[1].timestamp));
+            
             responsesBody.innerHTML = entries.map(([id, data]) => `
                 <tr>
                     <td>${data.guestName}</td>
                     <td>
-                        <span class="status-badge ${data.isAttending ? 'status-yes' : 'status-no'}">
-                            ${data.isAttending ? '✓ Sí' : '✗ No'}
+                        <span class="status-badge ${String(data.isAttending) === 'true' ? 'status-yes' : 'status-no'}">
+                            ${String(data.isAttending) === 'true' ? '✓ Sí' : '✗ No'}
                         </span>
                     </td>
                     <td>${new Date(data.timestamp).toLocaleString('es-ES')}</td>
@@ -414,15 +423,14 @@
             `).join('');
         }
         
-        // Exportar a Excel
         exportBtn.addEventListener('click', () => {
             try {
-                const data = localStorage.getItem('emilio-shower-all-responses');
+                const data = localStorage.getItem('emilio-shower-cloud-backup');
                 const responses = data ? JSON.parse(data) : {};
                 
-                const excelData = Object.entries(responses).map(([id, r]) => ({
+                const excelData = Object.values(responses).map(r => ({
                     'Nombre': r.guestName,
-                    'Confirmación': r.isAttending ? 'Sí' : 'No',
+                    'Confirmación': String(r.isAttending) === 'true' ? 'Sí' : 'No',
                     'Fecha de Respuesta': new Date(r.timestamp).toLocaleString('es-ES')
                 }));
                 
@@ -430,41 +438,20 @@
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, 'Respuestas');
                 
-                // Ajustar ancho de columnas
-                ws['!cols'] = [
-                    { wch: 20 },
-                    { wch: 15 },
-                    { wch: 25 }
-                ];
-                
+                ws['!cols'] = [{ wch: 20 }, { wch: 15 }, { wch: 25 }];
                 XLSX.writeFile(wb, 'Baby_Shower_Emilio_Respuestas.xlsx');
             } catch (e) {
-                console.error('Error exportando:', e);
                 alert('Error al exportar. Por favor intenta de nuevo.');
             }
         });
         
-        // Reiniciar todo
+        // Modificado por seguridad: Ahora no borra los datos desde el HTML para evitar pérdida accidental
         resetBtn.addEventListener('click', () => {
-            if (confirm('⚠️ ¿Estás seguro? Esto eliminará TODAS las respuestas y no se puede deshacer.')) {
-                localStorage.removeItem('emilio-shower-all-responses');
-                // Limpiar también las respuestas individuales
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key.startsWith('emilio-shower-response-')) {
-                        localStorage.removeItem(key);
-                    }
-                }
-                loadResponses();
-                alert('✓ Todas las respuestas han sido eliminadas correctamente.');
-            }
+            alert('🔒 Para borrar todas las respuestas de forma segura, por favor ingresa a tu documento de Google Sheets y borra las filas directamente.');
         });
         
-        // Recargar respuestas cada 5 segundos
         setInterval(() => {
-            if (isLoggedIn) {
-                loadResponses();
-            }
+            if (isLoggedIn) loadResponses();
         }, 5000);
     </script>
 </body>

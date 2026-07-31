@@ -446,142 +446,132 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
     <script>
-        const card = document.getElementById('card');
-        const closeBtn = document.getElementById('closeBtn');
-        
-        // Elementos Paso 1
-        const step1 = document.getElementById('step1');
-        const guestNameInput = document.getElementById('guestNameInput');
-        const nextStep1Btn = document.getElementById('nextStep1Btn');
-        
-        // Elementos Paso 2
-        const step2 = document.getElementById('step2');
-        const btnYes = document.getElementById('btnYes');
-        const btnNo = document.getElementById('btnNo');
-        const successMessage = document.getElementById('successMessage');
-        
-        let isExpanded = false;
-        let guestName = '';
-        let isAttending = false;
-        
-        // Generar ID único para este invitado
-        const guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
-        
-        // Cargar datos guardados
-        function loadData() {
-            try {
-                const data = localStorage.getItem('emilio-shower-response-' + guestId);
-                if (data) {
-                    const parsed = JSON.parse(data);
-                    guestName = parsed.guestName || '';
-                    isAttending = parsed.isAttending || false;
-                    
-                    // Mostrar mensaje de éxito si ya respondió
-                    if (guestName) {
-                        showStep2();
-                        successMessage.style.display = 'block';
-                    }
-                }
-            } catch (e) {
-                console.log('No saved data yet');
-            }
-        }
-        
-        // Guardar datos
-        function saveData() {
-            try {
-                const data = {
-                    guestId: guestId,
-                    guestName: guestName,
-                    timestamp: new Date().toISOString(),
-                    isAttending: isAttending
-                };
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwh7f2wqGOaUSZTis-U1TZ0h3I1X7i_1Zu2uG55kXU5l1buRYXNvFIW7D5qKWcTk4OM/exec'; // <--- Reemplaza esto
+
+    const card = document.getElementById('card');
+    const closeBtn = document.getElementById('closeBtn');
+    const step1 = document.getElementById('step1');
+    const guestNameInput = document.getElementById('guestNameInput');
+    const nextStep1Btn = document.getElementById('nextStep1Btn');
+    const step2 = document.getElementById('step2');
+    const btnYes = document.getElementById('btnYes');
+    const btnNo = document.getElementById('btnNo');
+    const successMessage = document.getElementById('successMessage');
+    
+    let isExpanded = false;
+    let guestName = '';
+    let isAttending = false;
+    
+    // Asignar y guardar un ID único para no duplicar si responden varias veces
+    let guestId = localStorage.getItem('emilio-shower-guest-id');
+    if (!guestId) {
+        guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('emilio-shower-guest-id', guestId);
+    }
+    
+    function loadData() {
+        try {
+            const data = localStorage.getItem('emilio-shower-response-' + guestId);
+            if (data) {
+                const parsed = JSON.parse(data);
+                guestName = parsed.guestName || '';
+                isAttending = parsed.isAttending || false;
                 
-                // Guardar respuesta individual
-                localStorage.setItem('emilio-shower-response-' + guestId, JSON.stringify(data));
-                
-                // Guardar en registro global para admin
-                const allResponses = getAllResponses();
-                allResponses[guestId] = data;
-                localStorage.setItem('emilio-shower-all-responses', JSON.stringify(allResponses));
-                
-            } catch (e) {
-                console.log('Could not save data');
-            }
-        }
-        
-        // Obtener todas las respuestas
-        function getAllResponses() {
-            try {
-                const data = localStorage.getItem('emilio-shower-all-responses');
-                if (data) {
-                    return JSON.parse(data);
-                }
-            } catch (e) {}
-            return {};
-        }
-        
-        // Mostrar pasos
-        function showStep1() {
-            step1.style.display = 'block';
-            step2.style.display = 'none';
-            guestNameInput.focus();
-        }
-        
-        function showStep2() {
-            step1.style.display = 'none';
-            step2.style.display = 'block';
-        }
-        
-        card.addEventListener('click', function(e) {
-            if (!isExpanded && !e.target.closest('.btn') && !e.target.closest('input') && !e.target.closest('.add-name-btn') && !e.target.closest('.remove-name') && e.target !== closeBtn) {
-                isExpanded = true;
-                card.classList.add('expanded');
-                if (!guestName) {
-                    showStep1();
+                if (guestName) {
+                    showStep2();
+                    successMessage.style.display = 'block';
                 }
             }
-        });
+        } catch (e) {}
+    }
+    
+    async function saveData() {
+        btnYes.disabled = true;
+        btnNo.disabled = true;
         
-        closeBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            isExpanded = false;
-            card.classList.remove('expanded');
-        });
-        
-        // Paso 1: Continuar con nombre
-        nextStep1Btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const name = guestNameInput.value.trim();
-            if (name && name.length > 0) {
-                guestName = name;
-                showStep2();
-            }
-        });
-        
-        guestNameInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                nextStep1Btn.click();
-            }
-        });
-        
-        // Paso 2: Confirmación
-        btnYes.addEventListener('click', function(e) {
-            e.stopPropagation();
-            isAttending = true;
-            saveData();
+        try {
+            const data = {
+                guestId: guestId,
+                guestName: guestName,
+                timestamp: new Date().toISOString(),
+                isAttending: isAttending
+            };
+            
+            localStorage.setItem('emilio-shower-response-' + guestId, JSON.stringify(data));
+            
+            // Enviar respuesta a la base de datos de Google Sheets
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            
+            successMessage.innerText = '✓ ¡Gracias por confirmar tu asistencia!';
             successMessage.style.display = 'block';
-        });
-        
-        btnNo.addEventListener('click', function(e) {
-            e.stopPropagation();
-            isAttending = false;
-            saveData();
+            
+        } catch (e) {
+            console.log('Error de conexión:', e);
+            successMessage.innerText = '✓ Guardado (hubo un problema de red, pero lo intentaremos de nuevo)';
             successMessage.style.display = 'block';
-        });
+        } finally {
+            btnYes.disabled = false;
+            btnNo.disabled = false;
+        }
+    }
+    
+    function showStep1() {
+        step1.style.display = 'block';
+        step2.style.display = 'none';
+        guestNameInput.focus();
+    }
+    
+    function showStep2() {
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+    }
+    
+    card.addEventListener('click', function(e) {
+        if (!isExpanded && !e.target.closest('.btn') && !e.target.closest('input') && !e.target.closest('.add-name-btn') && e.target !== closeBtn) {
+            isExpanded = true;
+            card.classList.add('expanded');
+            if (!guestName) {
+                showStep1();
+            }
+        }
+    });
+    
+    closeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        isExpanded = false;
+        card.classList.remove('expanded');
+    });
+    
+    nextStep1Btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const name = guestNameInput.value.trim();
+        if (name && name.length > 0) {
+            guestName = name;
+            showStep2();
+        }
+    });
+    
+    guestNameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') nextStep1Btn.click();
+    });
+    
+    btnYes.addEventListener('click', function(e) {
+        e.stopPropagation();
+        isAttending = true;
+        saveData();
+    });
+    
+    btnNo.addEventListener('click', function(e) {
+        e.stopPropagation();
+        isAttending = false;
+        saveData();
+    });
+    
+    loadData();
         
-        // Cargar datos al iniciar
-        loadData();
     </script>
 </body>
 </html>
