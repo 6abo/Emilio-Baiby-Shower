@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Shower Emilio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f3f0 0%, #f0ebe6 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .card-container {
+            perspective: 1000px;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #e8dfd8 0%, #f5ece3 100%);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(139, 121, 101, 0.15);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(139, 121, 101, 0.1);
+            position: relative;
+        }
+        
+        .card.expanded {
+            background: linear-gradient(135deg, #d4c5bb 0%, #e5d5c8 100%);
+        }
+        
+        .bear-svg {
+            width: 180px;
+            height: 180px;
+            margin: 30px 0;
+            filter: drop-shadow(0 4px 8px rgba(139, 121, 101, 0.1));
+            transition: transform 0.4s ease;
+        }
+        
+        .card.expanded .bear-svg {
+            transform: scale(0.75);
+        }
+        
+        .invitation-text {
+            text-align: center;
+            color: #6b5d52;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 20px 0 10px 0;
+            opacity: 0.7;
+        }
+        
+        .baby-name {
+            font-size: 48px;
+            font-weight: 300;
+            color: #5d7b6d;
+            margin: 15px 0;
+            letter-spacing: 3px;
+        }
+        
+        .tap-instruction {
+            font-size: 12px;
+            color: #8b7965;
+            font-style: italic;
+            margin-top: 30px;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        
+        .card.expanded .tap-instruction {
+            opacity: 0;
+            display: none;
+        }
+        
+        .details-section {
+            display: none;
+            text-align: center;
+            width: 100%;
+            animation: slideIn 0.4s ease forwards;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .card.expanded .details-section {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .event-detail {
+            margin: 16px 0;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            border-left: 4px solid #5d7b6d;
+        }
+        
+        .event-detail-label {
+            font-size: 12px;
+            color: #8b7965;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        
+        .event-detail-value {
+            font-size: 16px;
+            color: #5d7b6d;
+            font-weight: 500;
+        }
+        
+        .location-note {
+            font-size: 11px;
+            color: #8b7965;
+            margin-top: 8px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+        
+        .confirmation-section {
+            display: none;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(139, 121, 101, 0.2);
+            width: 100%;
+        }
+        
+        .card.expanded .confirmation-section {
+            display: block;
+        }
+        
+        .confirmation-text {
+            font-size: 13px;
+            color: #6b5d52;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-yes {
+            background: #5d7b6d;
+            color: white;
+        }
+        
+        .btn-yes:hover:not(:disabled) {
+            background: #4a6358;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(93, 123, 109, 0.3);
+        }
+        
+        .btn-yes:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-no {
+            background: white;
+            color: #8b7965;
+            border: 2px solid #8b7965;
+        }
+        
+        .btn-no:hover:not(:disabled) {
+            background: rgba(139, 121, 101, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .btn-no:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .names-input-section {
+            display: none;
+            margin-top: 16px;
+        }
+        
+        .confirmation-section.attending .names-input-section {
+            display: block;
+        }
+        
+        .input-label {
+            font-size: 12px;
+            color: #8b7965;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .names-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #5d7b6d;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #5d7b6d;
+            background: white;
+            font-family: inherit;
+            margin-bottom: 12px;
+        }
+        
+        .names-input::placeholder {
+            color: #c4aea1;
+        }
+        
+        .names-input:focus {
+            outline: none;
+            border-color: #5d7b6d;
+            box-shadow: 0 0 0 3px rgba(93, 123, 109, 0.1);
+        }
+        
+        .add-name-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(93, 123, 109, 0.1);
+            color: #5d7b6d;
+            border: 2px dashed #5d7b6d;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .add-name-btn:hover {
+            background: rgba(93, 123, 109, 0.15);
+        }
+        
+        .names-list {
+            margin-top: 12px;
+            text-align: left;
+        }
+        
+        .name-item {
+            background: rgba(93, 123, 109, 0.08);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 6px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #5d7b6d;
+        }
+        
+        .remove-name {
+            background: none;
+            border: none;
+            color: #c9755f;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0 4px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #8b7965;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        
+        .close-btn:hover {
+            color: #5d7b6d;
+        }
+        
+        .card.expanded .close-btn {
+            display: block;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #5d7b6d;
+            font-size: 14px;
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(93, 123, 109, 0.1);
+            border-radius: 8px;
+        }
+        
+        .card.expanded .success-message {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card-container">
+            <div class="card" id="card">
+                <button class="close-btn" id="closeBtn">✕</button>
+                
+                <!-- Contenido principal (inicial) -->
+                <div style="text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                    <!-- Osito SVG -->
+                    <svg class="bear-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Cabeza -->
+                        <circle cx="100" cy="90" r="55" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
+                        
+                        <!-- Orejas -->
+                        <circle cx="65" cy="45" r="22" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
+                        <circle cx="135" cy="45" r="22" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
+                        
+                        <!-- Detalles orejas -->
+                        <circle cx="65" cy="45" r="12" fill="#e8dfd8"/>
+                        <circle cx="135" cy="45" r="12" fill="#e8dfd8"/>
+                        
+                        <!-- Cuerpo -->
+                        <ellipse cx="100" cy="150" rx="45" ry="50" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
+                        
+                        <!-- Barriga -->
+                        <ellipse cx="100" cy="155" rx="28" ry="35" fill="#e8dfd8"/>
+                        
+                        <!-- Brazos -->
+                        <circle cx="65" cy="140" r="18" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
+                        <circle cx="135" cy="140" r="18" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
+                        
+                        <!-- Ojos -->
+                        <circle cx="85" cy="75" r="6" fill="#5d7b6d"/>
+                        <circle cx="115" cy="75" r="6" fill="#5d7b6d"/>
+                        <circle cx="87" cy="73" r="2.5" fill="white"/>
+                        <circle cx="117" cy="73" r="2.5" fill="white"/>
+                        
+                        <!-- Nariz -->
+                        <ellipse cx="100" cy="95" rx="5" ry="4" fill="#5d7b6d"/>
+                        
+                        <!-- Boca sonriente -->
+                        <path d="M 100 95 Q 90 105 85 102" stroke="#5d7b6d" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <path d="M 100 95 Q 110 105 115 102" stroke="#5d7b6d" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        
+                        <!-- Mejillas -->
+                        <circle cx="70" cy="90" r="8" fill="#d9a89f" opacity="0.3"/>
+                        <circle cx="130" cy="90" r="8" fill="#d9a89f" opacity="0.3"/>
+                        
+                        <!-- Pies -->
+                        <ellipse cx="82" cy="200" rx="14" ry="10" fill="#d4c5bb" stroke="#c4aea1" stroke-width="1.5"/>
+                        <ellipse cx="118" cy="200" rx="14" ry="10" fill="#d4c5bb" stroke="#c4aea1" stroke-width="1.5"/>
+                    </svg>
+                    
+                    <div class="invitation-text">Te invitamos a celebrar</div>
+                    <div class="baby-name">Emilio</div>
+                    
+                    <!-- Sección de detalles (oculta inicialmente) -->
+                    <div class="details-section">
+                        <div class="event-detail">
+                            <div class="event-detail-label">📅 Fecha</div>
+                            <div class="event-detail-value">Sábado, 8 de agosto de 2026</div>
+                        </div>
+                        
+                        <div class="event-detail">
+                            <div class="event-detail-label">📍 Ubicación</div>
+                            <div class="event-detail-value">Parque Señor de Burgos</div>
+                            <div class="event-detail-value" style="font-size: 14px; margin-top: 4px;">Federico Sánchez y Calle SN</div>
+                            <div class="location-note">🚗 Dejar los carros en el parque<br/>📹 Cámaras de vigilancia propias</div>
+                        </div>
+                        
+                        <div class="event-detail">
+                            <div class="event-detail-label">✨ Baby Shower de Hombre</div>
+                            <div class="event-detail-value">¡Un momento especial en familia!</div>
+                        </div>
+                    </div>
+                    
+                    <!-- PASO 1: Ingresar nombre -->
+                    <div class="step-section" id="step1" style="display: none;">
+                        <label class="input-label">¿Cuál es tu nombre?</label>
+                        <input type="text" class="names-input" id="guestNameInput" placeholder="Tu nombre completo">
+                        <button class="add-name-btn" id="nextStep1Btn" style="margin-top: 16px;">Continuar</button>
+                    </div>
+                    
+                    <!-- PASO 2: Confirmación de asistencia -->
+                    <div class="step-section" id="step2" style="display: none;">
+                        <div class="confirmation-text">¿Confirmas tu asistencia?</div>
+                        <div class="button-group">
+                            <button class="btn btn-yes" id="btnYes">Sí, iré</button>
+                            <button class="btn btn-no" id="btnNo">No puedo</button>
+                        </div>
+                        
+                        <div class="success-message" id="successMessage">
+                            ✓ ¡Gracias por confirmar tu asistencia!
+                        </div>
+                    </div>
+                    
+                    <div class="tap-instruction">Pulsa aquí para más información</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+    <script>
+        const card = document.getElementById('card');
+        const closeBtn = document.getElementById('closeBtn');
+        
+        // Elementos Paso 1
+        const step1 = document.getElementById('step1');
+        const guestNameInput = document.getElementById('guestNameInput');
+        const nextStep1Btn = document.getElementById('nextStep1Btn');
+        
+        // Elementos Paso 2
+        const step2 = document.getElementById('step2');
+        const btnYes = document.getElementById('btnYes');
+        const btnNo = document.getElementById('btnNo');
+        const successMessage = document.getElementById('successMessage');
+        
+        let isExpanded = false;
+        let guestName = '';
+        let isAttending = false;
+        
+        // Generar ID único para este invitado
+        const guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
+        
+        // Cargar datos guardados
+        function loadData() {
+            try {
+                const data = localStorage.getItem('emilio-shower-response-' + guestId);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    guestName = parsed.guestName || '';
+                    isAttending = parsed.isAttending || false;
+                    
+                    // Mostrar mensaje de éxito si ya respondió
+                    if (guestName) {
+                        showStep2();
+                        successMessage.style.display = 'block';
+                    }
+                }
+            } catch (e) {
+                console.log('No saved data yet');
+            }
+        }
+        
+        // Guardar datos
+        function saveData() {
+            try {
+                const data = {
+                    guestId: guestId,
+                    guestName: guestName,
+                    timestamp: new Date().toISOString(),
+                    isAttending: isAttending
+                };
+                
+                // Guardar respuesta individual
+                localStorage.setItem('emilio-shower-response-' + guestId, JSON.stringify(data));
+                
+                // Guardar en registro global para admin
+                const allResponses = getAllResponses();
+                allResponses[guestId] = data;
+                localStorage.setItem('emilio-shower-all-responses', JSON.stringify(allResponses));
+                
+            } catch (e) {
+                console.log('Could not save data');
+            }
+        }
+        
+        // Obtener todas las respuestas
+        function getAllResponses() {
+            try {
+                const data = localStorage.getItem('emilio-shower-all-responses');
+                if (data) {
+                    return JSON.parse(data);
+                }
+            } catch (e) {}
+            return {};
+        }
+        
+        // Mostrar pasos
+        function showStep1() {
+            step1.style.display = 'block';
+            step2.style.display = 'none';
+            guestNameInput.focus();
+        }
+        
+        function showStep2() {
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+        }
+        
+        card.addEventListener('click', function(e) {
+            if (!isExpanded && !e.target.closest('.btn') && !e.target.closest('input') && !e.target.closest('.add-name-btn') && !e.target.closest('.remove-name') && e.target !== closeBtn) {
+                isExpanded = true;
+                card.classList.add('expanded');
+                if (!guestName) {
+                    showStep1();
+                }
+            }
+        });
+        
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isExpanded = false;
+            card.classList.remove('expanded');
+        });
+        
+        // Paso 1: Continuar con nombre
+        nextStep1Btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const name = guestNameInput.value.trim();
+            if (name && name.length > 0) {
+                guestName = name;
+                showStep2();
+            }
+        });
+        
+        guestNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                nextStep1Btn.click();
+            }
+        });
+        
+        // Paso 2: Confirmación
+        btnYes.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isAttending = true;
+            saveData();
+            successMessage.style.display = 'block';
+        });
+        
+        btnNo.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isAttending = false;
+            saveData();
+            successMessage.style.display = 'block';
+        });
+        
+        // Cargar datos al iniciar
+        loadData();
+    </script>
+</body>
+</html>

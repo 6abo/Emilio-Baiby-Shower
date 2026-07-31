@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Baby Shower Emilio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f3f0 0%, #f0ebe6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(139, 121, 101, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .login-container h1 {
+            text-align: center;
+            color: #5d7b6d;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #5d7b6d;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #5d7b6d;
+        }
+        
+        .login-input::placeholder {
+            color: #c4aea1;
+        }
+        
+        .login-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(93, 123, 109, 0.1);
+        }
+        
+        .login-btn {
+            padding: 12px;
+            background: #5d7b6d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .login-btn:hover {
+            background: #4a6358;
+            transform: translateY(-2px);
+        }
+        
+        .error-message {
+            color: #c9755f;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .admin-container {
+            display: none;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .admin-header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(139, 121, 101, 0.15);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-header h1 {
+            color: #5d7b6d;
+            font-size: 28px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .admin-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-export {
+            background: #5d7b6d;
+            color: white;
+        }
+        
+        .btn-export:hover {
+            background: #4a6358;
+        }
+        
+        .btn-logout {
+            background: white;
+            color: #8b7965;
+            border: 2px solid #8b7965;
+        }
+        
+        .btn-logout:hover {
+            background: rgba(139, 121, 101, 0.05);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(139, 121, 101, 0.1);
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #8b7965;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 300;
+            color: #5d7b6d;
+        }
+        
+        .responses-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(139, 121, 101, 0.15);
+            overflow: hidden;
+        }
+        
+        .responses-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(139, 121, 101, 0.1);
+            background: #f9f7f4;
+        }
+        
+        .responses-header h2 {
+            color: #5d7b6d;
+            font-size: 18px;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #f9f7f4;
+            padding: 12px 20px;
+            text-align: left;
+            font-size: 12px;
+            color: #8b7965;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(139, 121, 101, 0.1);
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(139, 121, 101, 0.05);
+            color: #5d7b6d;
+            font-size: 14px;
+        }
+        
+        tr:hover {
+            background: rgba(93, 123, 109, 0.02);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-yes {
+            background: rgba(93, 123, 109, 0.15);
+            color: #5d7b6d;
+        }
+        
+        .status-no {
+            background: rgba(201, 117, 95, 0.15);
+            color: #c9755f;
+        }
+        
+        .empty-message {
+            padding: 60px 30px;
+            text-align: center;
+            color: #8b7965;
+        }
+        
+        .empty-message p {
+            font-size: 14px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login -->
+    <div class="login-container" id="loginContainer">
+        <h1>Panel de Administración</h1>
+        <p style="text-align: center; color: #8b7965; font-size: 14px; margin: -10px 0 10px;">Baby Shower Emilio</p>
+        <input type="password" id="passwordInput" class="login-input" placeholder="Contraseña">
+        <button class="login-btn" id="loginBtn">Acceder</button>
+        <div class="error-message" id="errorMessage">Contraseña incorrecta</div>
+    </div>
+    
+    <!-- Admin Panel -->
+    <div class="admin-container" id="adminContainer">
+        <div class="admin-header">
+            <h1>📊 Respuestas del Baby Shower</h1>
+            <div class="button-group">
+                <button class="admin-btn btn-export" id="exportBtn">Descargar Excel</button>
+                <button class="admin-btn btn-logout" style="background: #c9755f; color: white; border: none;" id="resetBtn">Reiniciar Todo</button>
+                <button class="admin-btn btn-logout" id="logoutBtn">Salir</button>
+            </div>
+        </div>
+        
+        <div class="stats" id="stats"></div>
+        
+        <div class="responses-container">
+            <div class="responses-header">
+                <h2>Lista de Asistentes</h2>
+            </div>
+            <div class="table-wrapper">
+                <table id="responsesTable">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Confirmación</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="responsesBody">
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 40px;">Cargando respuestas...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-message" id="emptyMessage" style="display: none;">
+                <p>Aún no hay respuestas</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+    <script>
+        // Configuración
+        const ADMIN_PASSWORD = 'emilio2026'; // Cambia esto por una contraseña más segura
+        const passwordInput = document.getElementById('passwordInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const loginContainer = document.getElementById('loginContainer');
+        const adminContainer = document.getElementById('adminContainer');
+        const exportBtn = document.getElementById('exportBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const responsesBody = document.getElementById('responsesBody');
+        const emptyMessage = document.getElementById('emptyMessage');
+        const statsContainer = document.getElementById('stats');
+        
+        let isLoggedIn = false;
+        
+        // Verificar si ya está logueado
+        window.addEventListener('load', () => {
+            const sessionPassword = sessionStorage.getItem('adminSessionEmilio');
+            if (sessionPassword === ADMIN_PASSWORD) {
+                isLoggedIn = true;
+                showAdminPanel();
+            }
+        });
+        
+        // Login
+        loginBtn.addEventListener('click', () => {
+            if (passwordInput.value === ADMIN_PASSWORD) {
+                sessionStorage.setItem('adminSessionEmilio', ADMIN_PASSWORD);
+                isLoggedIn = true;
+                errorMessage.style.display = 'none';
+                showAdminPanel();
+            } else {
+                errorMessage.style.display = 'block';
+                passwordInput.value = '';
+            }
+        });
+        
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loginBtn.click();
+            }
+        });
+        
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('adminSessionEmilio');
+            isLoggedIn = false;
+            loginContainer.style.display = 'flex';
+            adminContainer.style.display = 'none';
+            passwordInput.value = '';
+        });
+        
+        function showAdminPanel() {
+            loginContainer.style.display = 'none';
+            adminContainer.style.display = 'block';
+            loadResponses();
+        }
+        
+        // Cargar respuestas
+        function loadResponses() {
+            try {
+                const data = localStorage.getItem('emilio-shower-all-responses');
+                const responses = data ? JSON.parse(data) : {};
+                
+                renderResponses(responses);
+                renderStats(responses);
+            } catch (e) {
+                console.error('Error cargando respuestas:', e);
+            }
+        }
+        
+        function renderStats(responses) {
+            const entries = Object.values(responses);
+            const attending = entries.filter(r => r.isAttending).length;
+            const notAttending = entries.filter(r => !r.isAttending).length;
+            const total = attending + notAttending;
+            
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Confirmadas</div>
+                    <div class="stat-value">${attending}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">No Pueden Asistir</div>
+                    <div class="stat-value">${notAttending}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Respuestas</div>
+                    <div class="stat-value">${total}</div>
+                </div>
+            `;
+        }
+        
+        function renderResponses(responses) {
+            const entries = Object.entries(responses);
+            
+            if (entries.length === 0) {
+                responsesBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px;">Aún no hay respuestas</td></tr>';
+                return;
+            }
+            
+            responsesBody.innerHTML = entries.map(([id, data]) => `
+                <tr>
+                    <td>${data.guestName}</td>
+                    <td>
+                        <span class="status-badge ${data.isAttending ? 'status-yes' : 'status-no'}">
+                            ${data.isAttending ? '✓ Sí' : '✗ No'}
+                        </span>
+                    </td>
+                    <td>${new Date(data.timestamp).toLocaleString('es-ES')}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // Exportar a Excel
+        exportBtn.addEventListener('click', () => {
+            try {
+                const data = localStorage.getItem('emilio-shower-all-responses');
+                const responses = data ? JSON.parse(data) : {};
+                
+                const excelData = Object.entries(responses).map(([id, r]) => ({
+                    'Nombre': r.guestName,
+                    'Confirmación': r.isAttending ? 'Sí' : 'No',
+                    'Fecha de Respuesta': new Date(r.timestamp).toLocaleString('es-ES')
+                }));
+                
+                const ws = XLSX.utils.json_to_sheet(excelData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Respuestas');
+                
+                // Ajustar ancho de columnas
+                ws['!cols'] = [
+                    { wch: 20 },
+                    { wch: 15 },
+                    { wch: 25 }
+                ];
+                
+                XLSX.writeFile(wb, 'Baby_Shower_Emilio_Respuestas.xlsx');
+            } catch (e) {
+                console.error('Error exportando:', e);
+                alert('Error al exportar. Por favor intenta de nuevo.');
+            }
+        });
+        
+        // Reiniciar todo
+        resetBtn.addEventListener('click', () => {
+            if (confirm('⚠️ ¿Estás seguro? Esto eliminará TODAS las respuestas y no se puede deshacer.')) {
+                localStorage.removeItem('emilio-shower-all-responses');
+                // Limpiar también las respuestas individuales
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('emilio-shower-response-')) {
+                        localStorage.removeItem(key);
+                    }
+                }
+                loadResponses();
+                alert('✓ Todas las respuestas han sido eliminadas correctamente.');
+            }
+        });
+        
+        // Recargar respuestas cada 5 segundos
+        setInterval(() => {
+            if (isLoggedIn) {
+                loadResponses();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
