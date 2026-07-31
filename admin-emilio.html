@@ -120,15 +120,6 @@
             letter-spacing: 0.5px;
         }
         
-        .btn-export {
-            background: #5d7b6d;
-            color: white;
-        }
-        
-        .btn-export:hover {
-            background: #4a6358;
-        }
-        
         .btn-logout {
             background: white;
             color: #8b7965;
@@ -235,16 +226,23 @@
             background: rgba(201, 117, 95, 0.15);
             color: #c9755f;
         }
-        
-        .empty-message {
-            padding: 60px 30px;
-            text-align: center;
-            color: #8b7965;
+
+        /* Estilo para el nuevo botón de eliminar con equis */
+        .btn-delete {
+            background: none;
+            border: none;
+            color: #c9755f;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: bold;
         }
         
-        .empty-message p {
-            font-size: 14px;
-            margin: 10px 0;
+        .btn-delete:hover {
+            background: rgba(201, 117, 95, 0.15);
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -263,8 +261,6 @@
         <div class="admin-header">
             <h1>📊 Respuestas del Baby Shower</h1>
             <div class="button-group">
-                <button class="admin-btn btn-export" id="exportBtn">Descargar Excel</button>
-                <button class="admin-btn btn-logout" style="background: #c9755f; color: white; border: none;" id="resetBtn">Reiniciar Todo</button>
                 <button class="admin-btn btn-logout" id="logoutBtn">Salir</button>
             </div>
         </div>
@@ -282,22 +278,19 @@
                             <th>Nombre</th>
                             <th>Confirmación</th>
                             <th>Fecha</th>
+                            <th style="text-align: center;">Acción</th>
                         </tr>
                     </thead>
                     <tbody id="responsesBody">
                         <tr>
-                            <td colspan="3" style="text-align: center; padding: 40px;">Cargando respuestas...</td>
+                            <td colspan="4" style="text-align: center; padding: 40px;">Cargando respuestas...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="empty-message" id="emptyMessage" style="display: none;">
-                <p>Aún no hay respuestas</p>
-            </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwh7f2wqGOaUSZTis-U1TZ0h3I1X7i_1Zu2uG55kXU5l1buRYXNvFIW7D5qKWcTk4OM/exec'; // <--- Reemplaza esto
 
@@ -307,11 +300,8 @@
         const errorMessage = document.getElementById('errorMessage');
         const loginContainer = document.getElementById('loginContainer');
         const adminContainer = document.getElementById('adminContainer');
-        const exportBtn = document.getElementById('exportBtn');
         const logoutBtn = document.getElementById('logoutBtn');
-        const resetBtn = document.getElementById('resetBtn');
         const responsesBody = document.getElementById('responsesBody');
-        const emptyMessage = document.getElementById('emptyMessage');
         const statsContainer = document.getElementById('stats');
         
         let isLoggedIn = false;
@@ -353,35 +343,22 @@
             loadResponses();
         }
         
-        // Obtener respuestas desde la nube
         async function loadResponses() {
             try {
                 const response = await fetch(SCRIPT_URL);
                 const responses = await response.json();
-                
-                // Guardar backup local por si se necesita exportar
-                localStorage.setItem('emilio-shower-cloud-backup', JSON.stringify(responses));
-                
                 renderResponses(responses);
                 renderStats(responses);
             } catch (e) {
                 console.error('Error:', e);
-                // Si falla la red, cargar el último estado conocido
-                const backup = localStorage.getItem('emilio-shower-cloud-backup');
-                if (backup) {
-                    const parsed = JSON.parse(backup);
-                    renderResponses(parsed);
-                    renderStats(parsed);
-                } else {
-                    responsesBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #c9755f;">Error conectando con la base de datos...</td></tr>';
-                }
+                responsesBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #c9755f;">Error conectando con la base de datos...</td></tr>';
             }
         }
         
         function renderStats(responses) {
             const entries = Object.values(responses);
-            const attending = entries.filter(r => r.isAttending).length;
-            const notAttending = entries.filter(r => r.isAttending === false || r.isAttending === 'false').length;
+            const attending = entries.filter(r => String(r.isAttending) === 'true').length;
+            const notAttending = entries.filter(r => String(r.isAttending) === 'false').length;
             const total = entries.length;
             
             statsContainer.innerHTML = `
@@ -403,7 +380,7 @@
         function renderResponses(responses) {
             const entries = Object.entries(responses);
             if (entries.length === 0) {
-                responsesBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px;">Aún no hay respuestas</td></tr>';
+                responsesBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px;">Aún no hay respuestas</td></tr>';
                 return;
             }
             
@@ -419,36 +396,36 @@
                         </span>
                     </td>
                     <td>${new Date(data.timestamp).toLocaleString('es-ES')}</td>
+                    <td style="text-align: center;">
+                        <button class="btn-delete" onclick="deleteGuest('${data.guestId}', '${data.guestName}')" title="Eliminar este invitado">✕</button>
+                    </td>
                 </tr>
             `).join('');
         }
-        
-        exportBtn.addEventListener('click', () => {
-            try {
-                const data = localStorage.getItem('emilio-shower-cloud-backup');
-                const responses = data ? JSON.parse(data) : {};
-                
-                const excelData = Object.values(responses).map(r => ({
-                    'Nombre': r.guestName,
-                    'Confirmación': String(r.isAttending) === 'true' ? 'Sí' : 'No',
-                    'Fecha de Respuesta': new Date(r.timestamp).toLocaleString('es-ES')
-                }));
-                
-                const ws = XLSX.utils.json_to_sheet(excelData);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, 'Respuestas');
-                
-                ws['!cols'] = [{ wch: 20 }, { wch: 15 }, { wch: 25 }];
-                XLSX.writeFile(wb, 'Baby_Shower_Emilio_Respuestas.xlsx');
-            } catch (e) {
-                alert('Error al exportar. Por favor intenta de nuevo.');
+
+        // Nueva función para eliminar un invitado
+        window.deleteGuest = async function(guestId, guestName) {
+            if (confirm(`¿Estás seguro de que deseas eliminar a ${guestName} de la lista?`)) {
+                try {
+                    // Ponemos cargando en la tabla para que se note la acción
+                    responsesBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Eliminando invitado...</td></tr>';
+                    
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'delete',
+                            guestId: guestId
+                        })
+                    });
+                    
+                    // Recargamos los datos desde Google Sheets
+                    loadResponses();
+                } catch (e) {
+                    alert('Hubo un error al intentar eliminar. Por favor, revisa tu conexión.');
+                    loadResponses(); // Volver a cargar por si acaso
+                }
             }
-        });
-        
-        // Modificado por seguridad: Ahora no borra los datos desde el HTML para evitar pérdida accidental
-        resetBtn.addEventListener('click', () => {
-            alert('🔒 Para borrar todas las respuestas de forma segura, por favor ingresa a tu documento de Google Sheets y borra las filas directamente.');
-        });
+        };
         
         setInterval(() => {
             if (isLoggedIn) loadResponses();
