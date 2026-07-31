@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baby Shower Emilio</title>
+    <!-- Importar nuevas tipografías -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
@@ -12,10 +17,10 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #f5f3f0 0%, #f0ebe6 100%);
+            font-family: 'Quicksand', sans-serif;
+            background: #f8f6f2; /* Fondo muy claro */
             min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -24,6 +29,7 @@
         .container {
             width: 100%;
             max-width: 500px;
+            margin-left: 15px; /* Compensa la sombra para centrar bien */
         }
         
         .card-container {
@@ -31,62 +37,89 @@
         }
         
         .card {
-            background: linear-gradient(135deg, #e8dfd8 0%, #f5ece3 100%);
-            border-radius: 24px;
+            background: #f3efe8; /* Color crema de la invitación */
+            border-radius: 4px; /* Bordes menos redondeados, estilo papel */
             padding: 40px 30px;
-            box-shadow: 0 10px 40px rgba(139, 121, 101, 0.15);
+            /* Sombra sólida que emula la tarjeta verde de fondo */
+            box-shadow: -15px 15px 0px 0px #8b9a84; 
             cursor: pointer;
             transition: all 0.4s ease;
             min-height: 500px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid rgba(139, 121, 101, 0.1);
             position: relative;
+            border: 1px solid rgba(139, 121, 101, 0.1);
         }
         
         .card.expanded {
-            background: linear-gradient(135deg, #d4c5bb 0%, #e5d5c8 100%);
+            box-shadow: -10px 10px 0px 0px #8b9a84;
+            transform: translateY(5px) translateX(-5px);
+        }
+
+        /* Layout de dos columnas para la parte superior */
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+            transition: all 0.4s ease;
+        }
+
+        .card.expanded .hero-section {
+            transform: scale(0.9);
+            margin-bottom: 0px;
+        }
+
+        .text-column {
+            flex: 1;
+            text-align: left;
+            padding-right: 10px;
+            z-index: 2;
+        }
+
+        .image-column {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
         
         .bear-svg {
-            width: 180px;
-            height: 180px;
-            margin: 30px 0;
-            filter: drop-shadow(0 4px 8px rgba(139, 121, 101, 0.1));
-            transition: transform 0.4s ease;
-        }
-        
-        .card.expanded .bear-svg {
-            transform: scale(0.75);
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(139, 121, 101, 0.1));
         }
         
         .invitation-text {
-            text-align: center;
-            color: #6b5d52;
+            color: #8b7965;
             font-size: 14px;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin: 20px 0 10px 0;
-            opacity: 0.7;
+            margin-bottom: 10px;
+            line-height: 1.4;
         }
         
         .baby-name {
-            font-size: 48px;
-            font-weight: 300;
-            color: #5d7b6d;
-            margin: 15px 0;
-            letter-spacing: 3px;
+            font-family: 'Caveat', cursive;
+            font-size: 64px;
+            line-height: 1;
+            color: #798674; /* Verde salvia oscuro */
+            margin: 10px 0 20px -5px; /* Margen negativo para alinear la fuente cursiva */
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
         }
         
         .tap-instruction {
             font-size: 12px;
             color: #8b7965;
             font-style: italic;
-            margin-top: 30px;
-            opacity: 0.6;
+            margin-top: 20px;
+            text-align: center;
+            opacity: 0.8;
             transition: all 0.3s ease;
+            width: 100%;
         }
         
         .card.expanded .tap-instruction {
@@ -94,13 +127,13 @@
             display: none;
         }
         
+        /* Ajuste de los detalles para que sigan el estilo rústico */
         .details-section {
             display: none;
             text-align: center;
             width: 100%;
             animation: slideIn 0.4s ease forwards;
-            max-height: 400px;
-            overflow-y: auto;
+            padding-top: 10px;
         }
         
         .card.expanded .details-section {
@@ -108,79 +141,74 @@
         }
         
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .event-detail {
-            margin: 16px 0;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 12px;
-            border-left: 4px solid #5d7b6d;
+            margin: 12px 0;
+            padding: 12px 0;
+            border-top: 1px solid rgba(139, 121, 101, 0.2);
+            border-bottom: 1px solid rgba(139, 121, 101, 0.2);
         }
         
         .event-detail-label {
-            font-size: 12px;
+            font-size: 11px;
             color: #8b7965;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
         }
         
         .event-detail-value {
-            font-size: 16px;
-            color: #5d7b6d;
-            font-weight: 500;
+            font-size: 18px;
+            color: #798674;
+            font-family: 'Caveat', cursive; /* Toque cursivo en los detalles */
+            font-weight: 700;
+        }
+        
+        .event-detail-value.normal-text {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 5px;
         }
         
         .location-note {
             font-size: 11px;
             color: #8b7965;
             margin-top: 8px;
-            font-style: italic;
             line-height: 1.4;
         }
         
-        .confirmation-section {
-            display: none;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(139, 121, 101, 0.2);
+        .step-section {
+            margin-top: 20px;
+            text-align: center;
             width: 100%;
-        }
-        
-        .card.expanded .confirmation-section {
-            display: block;
         }
         
         .confirmation-text {
             font-size: 13px;
-            color: #6b5d52;
+            color: #8b7965;
             margin-bottom: 15px;
-            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .button-group {
             display: flex;
             gap: 12px;
             justify-content: center;
-            margin-bottom: 16px;
         }
         
         .btn {
             flex: 1;
-            padding: 12px 20px;
+            padding: 12px;
             border: none;
-            border-radius: 12px;
-            font-size: 14px;
+            border-radius: 4px;
+            font-size: 13px;
             font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
@@ -188,44 +216,22 @@
         }
         
         .btn-yes {
-            background: #5d7b6d;
+            background: #8b9a84;
             color: white;
         }
         
         .btn-yes:hover:not(:disabled) {
-            background: #4a6358;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(93, 123, 109, 0.3);
-        }
-        
-        .btn-yes:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+            background: #798674;
         }
         
         .btn-no {
-            background: white;
+            background: transparent;
             color: #8b7965;
-            border: 2px solid #8b7965;
+            border: 1px solid #8b7965;
         }
         
         .btn-no:hover:not(:disabled) {
             background: rgba(139, 121, 101, 0.05);
-            transform: translateY(-2px);
-        }
-        
-        .btn-no:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .names-input-section {
-            display: none;
-            margin-top: 16px;
-        }
-        
-        .confirmation-section.attending .names-input-section {
-            display: block;
         }
         
         .input-label {
@@ -239,87 +245,43 @@
         
         .names-input {
             width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #5d7b6d;
-            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #8b9a84;
+            border-radius: 4px;
             font-size: 14px;
-            color: #5d7b6d;
+            color: #798674;
             background: white;
             font-family: inherit;
-            margin-bottom: 12px;
-        }
-        
-        .names-input::placeholder {
-            color: #c4aea1;
-        }
-        
-        .names-input:focus {
-            outline: none;
-            border-color: #5d7b6d;
-            box-shadow: 0 0 0 3px rgba(93, 123, 109, 0.1);
+            text-align: center;
         }
         
         .add-name-btn {
             width: 100%;
-            padding: 10px;
-            background: rgba(93, 123, 109, 0.1);
-            color: #5d7b6d;
-            border: 2px dashed #5d7b6d;
-            border-radius: 8px;
+            padding: 12px;
+            background: #8b9a84;
+            color: white;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-        
-        .add-name-btn:hover {
-            background: rgba(93, 123, 109, 0.15);
-        }
-        
-        .names-list {
-            margin-top: 12px;
-            text-align: left;
-        }
-        
-        .name-item {
-            background: rgba(93, 123, 109, 0.08);
-            padding: 8px 12px;
-            border-radius: 8px;
-            margin: 6px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            color: #5d7b6d;
-        }
-        
-        .remove-name {
-            background: none;
-            border: none;
-            color: #c9755f;
-            cursor: pointer;
-            font-weight: bold;
-            padding: 0 4px;
+            letter-spacing: 1px;
         }
         
         .close-btn {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 20px;
             color: #8b7965;
             cursor: pointer;
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             transition: all 0.3s ease;
             display: none;
-        }
-        
-        .close-btn:hover {
-            color: #5d7b6d;
+            z-index: 10;
         }
         
         .card.expanded .close-btn {
@@ -329,16 +291,13 @@
         .success-message {
             display: none;
             text-align: center;
-            color: #5d7b6d;
+            color: #798674;
             font-size: 14px;
             margin-top: 16px;
             padding: 12px;
-            background: rgba(93, 123, 109, 0.1);
-            border-radius: 8px;
-        }
-        
-        .card.expanded .success-message {
-            display: block;
+            background: rgba(139, 154, 132, 0.15);
+            border-radius: 4px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -348,230 +307,257 @@
             <div class="card" id="card">
                 <button class="close-btn" id="closeBtn">✕</button>
                 
-                <!-- Contenido principal (inicial) -->
-                <div style="text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    <!-- Osito SVG -->
-                    <svg class="bear-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Cabeza -->
-                        <circle cx="100" cy="90" r="55" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
-                        
-                        <!-- Orejas -->
-                        <circle cx="65" cy="45" r="22" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
-                        <circle cx="135" cy="45" r="22" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
-                        
-                        <!-- Detalles orejas -->
-                        <circle cx="65" cy="45" r="12" fill="#e8dfd8"/>
-                        <circle cx="135" cy="45" r="12" fill="#e8dfd8"/>
-                        
-                        <!-- Cuerpo -->
-                        <ellipse cx="100" cy="150" rx="45" ry="50" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
-                        
-                        <!-- Barriga -->
-                        <ellipse cx="100" cy="155" rx="28" ry="35" fill="#e8dfd8"/>
-                        
-                        <!-- Brazos -->
-                        <circle cx="65" cy="140" r="18" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
-                        <circle cx="135" cy="140" r="18" fill="#d4c5bb" stroke="#c4aea1" stroke-width="2"/>
-                        
-                        <!-- Ojos -->
-                        <circle cx="85" cy="75" r="6" fill="#5d7b6d"/>
-                        <circle cx="115" cy="75" r="6" fill="#5d7b6d"/>
-                        <circle cx="87" cy="73" r="2.5" fill="white"/>
-                        <circle cx="117" cy="73" r="2.5" fill="white"/>
-                        
-                        <!-- Nariz -->
-                        <ellipse cx="100" cy="95" rx="5" ry="4" fill="#5d7b6d"/>
-                        
-                        <!-- Boca sonriente -->
-                        <path d="M 100 95 Q 90 105 85 102" stroke="#5d7b6d" stroke-width="2" fill="none" stroke-linecap="round"/>
-                        <path d="M 100 95 Q 110 105 115 102" stroke="#5d7b6d" stroke-width="2" fill="none" stroke-linecap="round"/>
-                        
-                        <!-- Mejillas -->
-                        <circle cx="70" cy="90" r="8" fill="#d9a89f" opacity="0.3"/>
-                        <circle cx="130" cy="90" r="8" fill="#d9a89f" opacity="0.3"/>
-                        
-                        <!-- Pies -->
-                        <ellipse cx="82" cy="200" rx="14" ry="10" fill="#d4c5bb" stroke="#c4aea1" stroke-width="1.5"/>
-                        <ellipse cx="118" cy="200" rx="14" ry="10" fill="#d4c5bb" stroke="#c4aea1" stroke-width="1.5"/>
-                    </svg>
-                    
-                    <div class="invitation-text">Te invitamos a celebrar</div>
-                    <div class="baby-name">Emilio</div>
-                    
-                    <!-- Sección de detalles (oculta inicialmente) -->
-                    <div class="details-section">
-                        <div class="event-detail">
-                            <div class="event-detail-label">📅 Fecha</div>
-                            <div class="event-detail-value">Sábado, 8 de agosto de 2026</div>
-                        </div>
-                        
-                        <div class="event-detail">
-                            <div class="event-detail-label">📍 Ubicación</div>
-                            <div class="event-detail-value">Parque Señor de Burgos</div>
-                            <div class="event-detail-value" style="font-size: 14px; margin-top: 4px;">Federico Sánchez y Calle SN</div>
-                            <div class="location-note">🚗 Dejar los carros en el parque<br/>📹 Cámaras de vigilancia propias</div>
-                        </div>
-                        
-                        <div class="event-detail">
-                            <div class="event-detail-label">✨ Baby Shower de Hombre</div>
-                            <div class="event-detail-value">¡Un momento especial en familia!</div>
-                        </div>
+                <!-- Diseño de dos columnas (Osito y globos a la derecha) -->
+                <div class="hero-section">
+                    <div class="text-column">
+                        <div class="invitation-text">Te invitamos<br>a celebrar</div>
+                        <div class="baby-name">Emilio</div>
                     </div>
                     
-                    <!-- PASO 1: Ingresar nombre -->
-                    <div class="step-section" id="step1" style="display: none;">
-                        <label class="input-label">¿Cuál es tu nombre?</label>
-                        <input type="text" class="names-input" id="guestNameInput" placeholder="Tu nombre completo">
-                        <button class="add-name-btn" id="nextStep1Btn" style="margin-top: 16px;">Continuar</button>
+                    <div class="image-column">
+                        <svg class="bear-svg" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Hilos de los globos (Unidos al brazo levantado) -->
+                            <g stroke="#8b7965" stroke-width="1.5">
+                                <path d="M 60 110 Q 50 60 40 40" fill="none"/>
+                                <path d="M 60 110 Q 65 60 70 30" fill="none"/>
+                                <path d="M 60 110 Q 80 70 100 40" fill="none"/>
+                                <path d="M 60 110 Q 90 80 130 50" fill="none"/>
+                            </g>
+
+                            <!-- Globos -->
+                            <!-- Capa trasera -->
+                            <circle cx="40" cy="40" r="28" fill="#8b9a84" opacity="0.95"/> <!-- Verde salvia -->
+                            <circle cx="100" cy="40" r="25" fill="#cbbcad" opacity="0.9"/> <!-- Café taupe -->
+                            <circle cx="130" cy="50" r="20" fill="#fcf9f2" opacity="0.9"/> <!-- Blanco crema -->
+                            
+                            <!-- Capa frontal -->
+                            <circle cx="70" cy="30" r="32" fill="#e5d5c8" opacity="0.95"/> <!-- Beige claro -->
+                            <circle cx="110" cy="65" r="22" fill="#8b9a84" opacity="0.95"/> <!-- Verde salvia pequeño -->
+                            <circle cx="50" cy="70" r="18" fill="#fcf9f2" opacity="0.95"/> <!-- Blanco crema pequeño -->
+                            <circle cx="85" cy="75" r="26" fill="#cbbcad" opacity="0.95"/> <!-- Café taupe frontal -->
+
+                            <!-- OSITO -->
+                            <!-- Orejas -->
+                            <circle cx="55" cy="120" r="14" fill="#cbbcad"/>
+                            <circle cx="105" cy="120" r="14" fill="#cbbcad"/>
+                            <circle cx="55" cy="120" r="8" fill="#e5d5c8"/>
+                            <circle cx="105" cy="120" r="8" fill="#e5d5c8"/>
+                            
+                            <!-- Cabeza -->
+                            <circle cx="80" cy="145" r="35" fill="#cbbcad"/>
+                            
+                            <!-- Cuerpo -->
+                            <ellipse cx="85" cy="195" rx="30" ry="35" fill="#cbbcad"/>
+                            
+                            <!-- Barriga -->
+                            <ellipse cx="85" cy="200" rx="18" ry="22" fill="#e5d5c8"/>
+                            
+                            <!-- Brazo Izquierdo (Levantado sosteniendo globos) -->
+                            <ellipse cx="55" cy="125" rx="10" ry="25" fill="#cbbcad" transform="rotate(30 55 125)"/>
+                            <!-- Brazo Derecho (Relajado) -->
+                            <ellipse cx="115" cy="190" rx="10" ry="20" fill="#cbbcad" transform="rotate(-20 115 190)"/>
+                            
+                            <!-- Ojos -->
+                            <circle cx="68" cy="138" r="3.5" fill="#4a4036"/>
+                            <circle cx="92" cy="138" r="3.5" fill="#4a4036"/>
+                            <circle cx="69" cy="137" r="1.5" fill="white"/>
+                            <circle cx="93" cy="137" r="1.5" fill="white"/>
+                            
+                            <!-- Hocico -->
+                            <ellipse cx="80" cy="150" rx="12" ry="9" fill="#e5d5c8"/>
+                            <!-- Nariz -->
+                            <ellipse cx="80" cy="147" rx="4" ry="3" fill="#4a4036"/>
+                            
+                            <!-- Lazo al cuello (Mismo verde salvia) -->
+                            <path d="M 80 165 L 65 175 L 68 158 Z" fill="#8b9a84"/>
+                            <path d="M 80 165 L 95 175 L 92 158 Z" fill="#8b9a84"/>
+                            <circle cx="80" cy="165" r="4" fill="#798674"/>
+
+                            <!-- Pies -->
+                            <ellipse cx="65" cy="230" rx="12" ry="9" fill="#cbbcad"/>
+                            <ellipse cx="105" cy="230" rx="12" ry="9" fill="#cbbcad"/>
+                            <ellipse cx="65" cy="228" rx="6" ry="5" fill="#e5d5c8"/>
+                            <ellipse cx="105" cy="228" rx="6" ry="5" fill="#e5d5c8"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="tap-instruction" id="tapInstruction">Pulsa aquí para confirmar asistencia</div>
+
+                <!-- Detalles y Formularios (Ocultos inicialmente) -->
+                <div class="details-section">
+                    <div class="event-detail" style="border-top: none;">
+                        <div class="event-detail-label">Fecha</div>
+                        <div class="event-detail-value">Sábado, 8 de agosto de 2026</div>
                     </div>
                     
-                    <!-- PASO 2: Confirmación de asistencia -->
-                    <div class="step-section" id="step2" style="display: none;">
-                        <div class="confirmation-text">¿Confirmas tu asistencia?</div>
-                        <div class="button-group">
-                            <button class="btn btn-yes" id="btnYes">Sí, iré</button>
-                            <button class="btn btn-no" id="btnNo">No puedo</button>
-                        </div>
-                        
-                        <div class="success-message" id="successMessage">
-                            ✓ ¡Gracias por confirmar tu asistencia!
-                        </div>
+                    <div class="event-detail">
+                        <div class="event-detail-label">Ubicación</div>
+                        <div class="event-detail-value normal-text">Parque Señor de Burgos</div>
+                        <div class="location-note" style="margin-top: 4px;">Federico Sánchez y Calle SN</div>
+                        <div class="location-note">🚗 Dejar los carros en el parque<br/>📹 Cámaras de vigilancia propias</div>
                     </div>
                     
-                    <div class="tap-instruction">Pulsa aquí para más información</div>
+                    <div class="event-detail" style="border-bottom: none;">
+                        <div class="event-detail-label">✨ Baby Shower de Hombre</div>
+                        <div class="event-detail-value normal-text" style="color: #8b7965; font-weight: normal;">¡Un momento especial en familia!</div>
+                    </div>
+                </div>
+                
+                <!-- PASO 1: Ingresar nombre -->
+                <div class="step-section" id="step1" style="display: none;">
+                    <label class="input-label">¿Cuál es tu nombre?</label>
+                    <input type="text" class="names-input" id="guestNameInput" placeholder="Tu nombre completo">
+                    <button class="add-name-btn" id="nextStep1Btn" style="margin-top: 16px;">Continuar</button>
+                </div>
+                
+                <!-- PASO 2: Confirmación de asistencia -->
+                <div class="step-section" id="step2" style="display: none;">
+                    <div class="confirmation-text">Favor de confirmar tu asistencia</div>
+                    <div class="button-group">
+                        <button class="btn btn-yes" id="btnYes">Sí, iré</button>
+                        <button class="btn btn-no" id="btnNo">No puedo</button>
+                    </div>
+                    
+                    <div class="success-message" id="successMessage"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwh7f2wqGOaUSZTis-U1TZ0h3I1X7i_1Zu2uG55kXU5l1buRYXNvFIW7D5qKWcTk4OM/exec'; // <--- Reemplaza esto
+        const SCRIPT_URL = 'PEGA_AQUÍ_TU_URL_DE_APPS_SCRIPT'; // <--- Reemplaza esto con tu URL real
 
-    const card = document.getElementById('card');
-    const closeBtn = document.getElementById('closeBtn');
-    const step1 = document.getElementById('step1');
-    const guestNameInput = document.getElementById('guestNameInput');
-    const nextStep1Btn = document.getElementById('nextStep1Btn');
-    const step2 = document.getElementById('step2');
-    const btnYes = document.getElementById('btnYes');
-    const btnNo = document.getElementById('btnNo');
-    const successMessage = document.getElementById('successMessage');
-    
-    let isExpanded = false;
-    let guestName = '';
-    let isAttending = false;
-    
-    // Asignar y guardar un ID único para no duplicar si responden varias veces
-    let guestId = localStorage.getItem('emilio-shower-guest-id');
-    if (!guestId) {
-        guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('emilio-shower-guest-id', guestId);
-    }
-    
-    function loadData() {
-        try {
-            const data = localStorage.getItem('emilio-shower-response-' + guestId);
-            if (data) {
-                const parsed = JSON.parse(data);
-                guestName = parsed.guestName || '';
-                isAttending = parsed.isAttending || false;
+        const card = document.getElementById('card');
+        const closeBtn = document.getElementById('closeBtn');
+        const tapInstruction = document.getElementById('tapInstruction');
+        const step1 = document.getElementById('step1');
+        const guestNameInput = document.getElementById('guestNameInput');
+        const nextStep1Btn = document.getElementById('nextStep1Btn');
+        const step2 = document.getElementById('step2');
+        const btnYes = document.getElementById('btnYes');
+        const btnNo = document.getElementById('btnNo');
+        const successMessage = document.getElementById('successMessage');
+        
+        let isExpanded = false;
+        let guestName = '';
+        let isAttending = false;
+        
+        let guestId = localStorage.getItem('emilio-shower-guest-id');
+        if (!guestId) {
+            guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('emilio-shower-guest-id', guestId);
+        }
+        
+        function loadData() {
+            try {
+                const data = localStorage.getItem('emilio-shower-response-' + guestId);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    guestName = parsed.guestName || '';
+                    isAttending = parsed.isAttending || false;
+                    
+                    if (guestName) {
+                        showStep2();
+                        successMessage.innerText = '✓ ¡Gracias por confirmar tu asistencia!';
+                        successMessage.style.display = 'block';
+                    }
+                }
+            } catch (e) {}
+        }
+        
+        async function saveData() {
+            btnYes.disabled = true;
+            btnNo.disabled = true;
+            
+            try {
+                const data = {
+                    guestId: guestId,
+                    guestName: guestName,
+                    timestamp: new Date().toISOString(),
+                    isAttending: isAttending
+                };
                 
-                if (guestName) {
-                    showStep2();
-                    successMessage.style.display = 'block';
+                localStorage.setItem('emilio-shower-response-' + guestId, JSON.stringify(data));
+                
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                
+                successMessage.innerText = '✓ ¡Gracias por confirmar tu asistencia!';
+                successMessage.style.display = 'block';
+                
+            } catch (e) {
+                console.log('Error de conexión:', e);
+                successMessage.innerText = '✓ Guardado (hubo un problema de red, pero lo intentaremos de nuevo)';
+                successMessage.style.display = 'block';
+            } finally {
+                btnYes.disabled = false;
+                btnNo.disabled = false;
+            }
+        }
+        
+        function showStep1() {
+            step1.style.display = 'block';
+            step2.style.display = 'none';
+            tapInstruction.style.display = 'none';
+            guestNameInput.focus();
+        }
+        
+        function showStep2() {
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+            tapInstruction.style.display = 'none';
+        }
+        
+        card.addEventListener('click', function(e) {
+            if (!isExpanded && !e.target.closest('.btn') && !e.target.closest('input') && !e.target.closest('.add-name-btn') && e.target !== closeBtn) {
+                isExpanded = true;
+                card.classList.add('expanded');
+                if (!guestName) {
+                    showStep1();
+                } else {
+                    tapInstruction.style.display = 'none';
                 }
             }
-        } catch (e) {}
-    }
-    
-    async function saveData() {
-        btnYes.disabled = true;
-        btnNo.disabled = true;
+        });
         
-        try {
-            const data = {
-                guestId: guestId,
-                guestName: guestName,
-                timestamp: new Date().toISOString(),
-                isAttending: isAttending
-            };
-            
-            localStorage.setItem('emilio-shower-response-' + guestId, JSON.stringify(data));
-            
-            // Enviar respuesta a la base de datos de Google Sheets
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
-            
-            successMessage.innerText = '✓ ¡Gracias por confirmar tu asistencia!';
-            successMessage.style.display = 'block';
-            
-        } catch (e) {
-            console.log('Error de conexión:', e);
-            successMessage.innerText = '✓ Guardado (hubo un problema de red, pero lo intentaremos de nuevo)';
-            successMessage.style.display = 'block';
-        } finally {
-            btnYes.disabled = false;
-            btnNo.disabled = false;
-        }
-    }
-    
-    function showStep1() {
-        step1.style.display = 'block';
-        step2.style.display = 'none';
-        guestNameInput.focus();
-    }
-    
-    function showStep2() {
-        step1.style.display = 'none';
-        step2.style.display = 'block';
-    }
-    
-    card.addEventListener('click', function(e) {
-        if (!isExpanded && !e.target.closest('.btn') && !e.target.closest('input') && !e.target.closest('.add-name-btn') && e.target !== closeBtn) {
-            isExpanded = true;
-            card.classList.add('expanded');
-            if (!guestName) {
-                showStep1();
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isExpanded = false;
+            card.classList.remove('expanded');
+            if(!guestName) {
+                tapInstruction.style.display = 'block';
             }
-        }
-    });
-    
-    closeBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        isExpanded = false;
-        card.classList.remove('expanded');
-    });
-    
-    nextStep1Btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const name = guestNameInput.value.trim();
-        if (name && name.length > 0) {
-            guestName = name;
-            showStep2();
-        }
-    });
-    
-    guestNameInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') nextStep1Btn.click();
-    });
-    
-    btnYes.addEventListener('click', function(e) {
-        e.stopPropagation();
-        isAttending = true;
-        saveData();
-    });
-    
-    btnNo.addEventListener('click', function(e) {
-        e.stopPropagation();
-        isAttending = false;
-        saveData();
-    });
-    
-    loadData();
+        });
         
+        nextStep1Btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const name = guestNameInput.value.trim();
+            if (name && name.length > 0) {
+                guestName = name;
+                showStep2();
+            }
+        });
+        
+        guestNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') nextStep1Btn.click();
+        });
+        
+        btnYes.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isAttending = true;
+            saveData();
+        });
+        
+        btnNo.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isAttending = false;
+            saveData();
+        });
+        
+        loadData();
     </script>
 </body>
 </html>
