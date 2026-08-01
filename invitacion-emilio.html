@@ -50,7 +50,7 @@
         }
         
         .card-container {
-            perspective: 1000px;
+            perspective: 1200px; /* Profundidad 3D para toda la tarjeta */
             width: 100%;
         }
         
@@ -60,8 +60,8 @@
             background-position: center;
             background-repeat: no-repeat;
             border-radius: 8px; 
-            padding: 15px; /* Espacio interior reducido */
-            box-shadow: -8px 8px 0px 0px #8b9a84; /* Recuadro verde reducido */
+            padding: 15px; 
+            box-shadow: -8px 8px 0px 0px #8b9a84; 
             cursor: pointer;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             height: auto; 
@@ -73,12 +73,12 @@
         }
         
         .card.expanded {
-            box-shadow: -4px 4px 0px 0px #8b9a84; /* Sombra sutil al expandir */
+            box-shadow: -4px 4px 0px 0px #8b9a84; 
             transform: translateY(4px) translateX(-4px);
             padding-bottom: 25px;
         }
 
-        /* CONTENEDOR PARA LA TRANSICIÓN DE LAS DOS IMÁGENES */
+        /* CONTENEDOR PARA LA TRANSICIÓN 3D */
         .image-transition-wrapper {
             position: relative;
             width: 100%;
@@ -86,43 +86,62 @@
             box-shadow: 0 0 0 2px rgba(139, 154, 132, 0.6), 0 10px 25px rgba(118, 134, 110, 0.4);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             margin: 0 auto;
-            transform-origin: top center;
             overflow: hidden; 
             -webkit-mask-image: -webkit-radial-gradient(white, black);
+            perspective: 1000px; /* Esto permite el efecto de doblez 3D en las imágenes */
         }
 
-        /* AQUÍ ESTÁ EL CAMBIO PRINCIPAL PARA EL CLIC */
         .card.expanded .image-transition-wrapper {
-            transform: scale(1); /* Mantiene el tamaño 100% igual que la portada */
             border-radius: 12px;
             box-shadow: 0 0 0 2px rgba(139, 154, 132, 0.5), 0 8px 20px rgba(118, 134, 110, 0.4);
-            margin-bottom: 12px; /* Espacio perfecto antes del contador */
+            margin-bottom: 12px; 
         }
         
         .cover-image {
             width: 100%;
             height: auto;
             display: block;
-            transition: opacity 0.5s ease;
+            /* Transición más larga y suave para el doblez del sobre */
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); 
         }
 
-        .img-1 { opacity: 1; }
+        /* IMAGEN 1: La portada que se abre como solapa */
+        .img-1 { 
+            opacity: 1; 
+            transform-origin: top center; /* El doblez ocurre en la parte superior */
+            transform: rotateX(0deg);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* IMAGEN 2: Los detalles que salen desde abajo/adentro */
         .img-2 {
             position: absolute;
             top: 0;
             left: 0;
             opacity: 0;
+            transform: translateY(30px) scale(0.9); /* Posicionada más abajo y pequeña */
+            z-index: 1;
         }
 
-        .card.expanded .img-1 { opacity: 0; }
-        .card.expanded .img-2 { opacity: 1; }
+        /* AL EXPANDIR (EFECTO SOBRE ABIERTO) */
+        .card.expanded .img-1 { 
+            opacity: 0; 
+            transform: rotateX(100deg); /* Se dobla hacia atrás/arriba */
+            transition-duration: 0.6s; /* Desaparece un poco más rápido */
+        }
+        
+        .card.expanded .img-2 { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); /* Sube a su posición final */
+        }
         
         /* Detalles del evento */
         .details-section {
             display: none;
             text-align: center;
             width: 100%;
-            animation: slideIn 0.5s ease forwards;
+            animation: slideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; /* Misma animación del sobre */
             padding-top: 0px; 
         }
         
@@ -131,7 +150,7 @@
         }
         
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-20px); }
+            from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -437,6 +456,8 @@
                     <div class="event-detail">
                         <div class="event-detail-label">Ubicación</div>
                         
+                        <!-- CAMBIO DE TÍTULO AQUÍ -->
+                         <div class="event-detail-value">Parque Señor de Burgos</div>
                         <div class="event-detail-value">Condominio San Francisco</div>
                         
                         <div class="location-note">Federico Sánchez y Calle SN</div>
@@ -450,7 +471,7 @@
                             </iframe>
                         </div>
 
-                        <div class="location-note">🚗 Dejar los carros en el parque<br/>📹 Cámaras de vigilancia propias</div>
+                        <div class="location-note">📍Llega hasta el tope de la calle, vas ver un muro de ladrillos <br/>🚗 Deja tu vehiculo en el parqueadero del parque<br/>📹 Tenemos cámaras de vigilancia propias 24/7<br/>📞Llamanos a Vivi o Cristo, estaremos pendientes a tu llegada</div>
                     </div>
                 </div>
                 
@@ -476,7 +497,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = 'PEGA_AQUÍ_TU_URL_DE_APPS_SCRIPT'; // <--- URL de Google Sheets
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwh7f2wqGOaUSZTis-U1TZ0h3I1X7i_1Zu2uG55kXU5l1buRYXNvFIW7D5qKWcTk4OM/exec'; // <--- URL de Google Sheets
 
         const card = document.getElementById('card');
         const closeBtn = document.getElementById('closeBtn');
