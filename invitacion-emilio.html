@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baby Shower Emilio</title>
-    <!-- Importar nuevas tipografías -->
+    <!-- Importar tipografías para los detalles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -18,7 +18,16 @@
         
         body {
             font-family: 'Quicksand', sans-serif;
-            background: #f8f6f2; /* Fondo muy claro */
+            background-color: #f8f6f2; 
+            
+            /* --- AQUÍ VA TU IMAGEN DE FONDO DE PANTALLA --- */
+            background-image: url('fondo.png'); 
+            
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; 
+            
             min-height: 100vh;
             padding: 40px 20px;
             display: flex;
@@ -26,114 +35,94 @@
             justify-content: center;
         }
         
+        /* EL NUEVO CONTENEDOR CON COLOR CREMA DE INVITACION2 */
         .container {
             width: 100%;
-            max-width: 500px;
-            margin-left: 15px; /* Compensa la sombra para centrar bien */
+            max-width: 540px;
+            padding: 40px 25px 45px 40px; 
+            margin: 0 auto;
+            background: rgba(253, 250, 242, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            border: 1px solid rgba(253, 250, 242, 0.9);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
         
         .card-container {
             perspective: 1000px;
+            width: 100%;
         }
         
         .card {
-            background: #f3efe8; /* Color crema de la invitación */
-            border-radius: 4px; /* Bordes menos redondeados, estilo papel */
-            padding: 40px 30px;
-            /* Sombra sólida que emula la tarjeta verde de fondo */
+            background-image: url('Tarjeta de agradecimiento Baby shower Moderno Ilustrado Acuarela Beige.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 4px; 
+            padding: 30px 25px;
             box-shadow: -15px 15px 0px 0px #8b9a84; 
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             min-height: 500px;
             display: flex;
             flex-direction: column;
+            align-items: center;
             position: relative;
             border: 1px solid rgba(139, 121, 101, 0.1);
         }
         
         .card.expanded {
-            box-shadow: -10px 10px 0px 0px #8b9a84;
+            box-shadow: -8px 8px 0px 0px #8b9a84;
             transform: translateY(5px) translateX(-5px);
+            padding-bottom: 40px;
         }
 
-        /* Layout de dos columnas para la parte superior */
-        .hero-section {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 20px;
-            transition: all 0.4s ease;
-        }
-
-        .card.expanded .hero-section {
-            transform: scale(0.9);
-            margin-bottom: 0px;
-        }
-
-        .text-column {
-            flex: 1;
-            text-align: left;
-            padding-right: 10px;
-            z-index: 2;
-        }
-
-        .image-column {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* CONTENEDOR PARA LA TRANSICIÓN DE LAS DOS IMÁGENES */
+        .image-transition-wrapper {
             position: relative;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 0 0 3px rgba(139, 154, 132, 0.8), 0 15px 30px rgba(118, 134, 110, 0.6);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 0 auto;
+            transform-origin: top center;
+            overflow: hidden; 
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+        }
+
+        .card.expanded .image-transition-wrapper {
+            transform: scale(0.85);
+            border-radius: 20px;
+            box-shadow: 0 0 0 2px rgba(139, 154, 132, 0.5), 0 8px 20px rgba(118, 134, 110, 0.4);
+            margin-bottom: -75px;
         }
         
-        .bear-svg {
+        .cover-image {
             width: 100%;
-            max-width: 200px;
             height: auto;
-            filter: drop-shadow(0 4px 6px rgba(139, 121, 101, 0.1));
+            display: block;
+            transition: opacity 0.5s ease;
         }
-        
-        .invitation-text {
-            color: #8b7965;
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-        
-        .baby-name {
-            font-family: 'Caveat', cursive;
-            font-size: 64px;
-            line-height: 1;
-            color: #798674; /* Verde salvia oscuro */
-            margin: 10px 0 20px -5px; /* Margen negativo para alinear la fuente cursiva */
-            text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
-        }
-        
-        .tap-instruction {
-            font-size: 12px;
-            color: #8b7965;
-            font-style: italic;
-            margin-top: 20px;
-            text-align: center;
-            opacity: 0.8;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-        
-        .card.expanded .tap-instruction {
+
+        .img-1 { opacity: 1; }
+        .img-2 {
+            position: absolute;
+            top: 0;
+            left: 0;
             opacity: 0;
-            display: none;
         }
+
+        .card.expanded .img-1 { opacity: 0; }
+        .card.expanded .img-2 { opacity: 1; }
         
-        /* Ajuste de los detalles para que sigan el estilo rústico */
+        /* Detalles del evento */
         .details-section {
             display: none;
             text-align: center;
             width: 100%;
-            animation: slideIn 0.4s ease forwards;
-            padding-top: 10px;
+            animation: slideIn 0.5s ease forwards;
+            padding-top: 0px; 
         }
         
         .card.expanded .details-section {
@@ -141,15 +130,18 @@
         }
         
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
+            from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
         .event-detail {
-            margin: 12px 0;
+            margin: 10px 0;
             padding: 12px 0;
-            border-top: 1px solid rgba(139, 121, 101, 0.2);
-            border-bottom: 1px solid rgba(139, 121, 101, 0.2);
+            border-bottom: 1px solid rgba(139, 121, 101, 0.15);
+        }
+        
+        .event-detail:last-child {
+            border-bottom: none;
         }
         
         .event-detail-label {
@@ -157,32 +149,121 @@
             color: #8b7965;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         
         .event-detail-value {
+            font-size: 15px;
+            color: #798674;
+            font-weight: 600;
+        }
+
+        /* --- ESTILOS DEL NUEVO CONTADOR DIGITAL TIPO CALENDARIO --- */
+        .countdown-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 15px 0 5px 0;
+        }
+
+        .cd-box {
+            background: linear-gradient(180deg, #ffffff 50%, #f4f1eb 50%);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(139, 121, 101, 0.15), inset 0 2px 0 rgba(255,255,255,0.8);
+            min-width: 65px;
+            padding: 12px 5px;
+            position: relative;
+            border: 1px solid rgba(139, 121, 101, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cd-box::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(139, 121, 101, 0.15);
+            box-shadow: 0 1px 0 rgba(255,255,255,0.8);
+        }
+
+        .cd-box::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 6px;
+            background: transparent;
+            border-left: 5px solid #8b9a84;
+            border-right: 5px solid #8b9a84;
+            border-radius: 3px;
+            z-index: 2;
+            opacity: 0.8;
+        }
+
+        .cd-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #798674;
+            line-height: 1;
+            font-family: 'Quicksand', sans-serif;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cd-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #8b7965;
+            margin-top: 8px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .cd-mensaje-final {
+            display: none;
             font-size: 18px;
             color: #798674;
-            font-family: 'Caveat', cursive; /* Toque cursivo en los detalles */
             font-weight: 700;
+            margin-top: 15px;
+            letter-spacing: 1px;
         }
-        
-        .event-detail-value.normal-text {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 5px;
+
+        /* --- ESTILOS DEL MAPA GOOGLE --- */
+        .map-wrapper {
+            margin-top: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border: 2px solid #8b9a84;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(139, 121, 101, 0.15);
+            height: 160px;
+            position: relative;
         }
+
+        .map-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        /* -------------------------------------------------------- */
         
         .location-note {
             font-size: 11px;
             color: #8b7965;
-            margin-top: 8px;
+            margin-top: 6px;
             line-height: 1.4;
         }
         
+        /* Formularios y Botones */
         .step-section {
-            margin-top: 20px;
+            margin-top: 15px;
             text-align: center;
             width: 100%;
         }
@@ -190,7 +271,7 @@
         .confirmation-text {
             font-size: 13px;
             color: #8b7965;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -205,7 +286,7 @@
             flex: 1;
             padding: 12px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 13px;
             font-weight: 600;
             font-family: 'Quicksand', sans-serif;
@@ -220,19 +301,15 @@
             color: white;
         }
         
-        .btn-yes:hover:not(:disabled) {
-            background: #798674;
-        }
+        .btn-yes:hover:not(:disabled) { background: #798674; }
         
         .btn-no {
             background: transparent;
             color: #8b7965;
-            border: 1px solid #8b7965;
+            border: 2px solid #8b7965;
         }
         
-        .btn-no:hover:not(:disabled) {
-            background: rgba(139, 121, 101, 0.05);
-        }
+        .btn-no:hover:not(:disabled) { background: rgba(139, 121, 101, 0.05); }
         
         .input-label {
             font-size: 12px;
@@ -246,13 +323,18 @@
         .names-input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #8b9a84;
-            border-radius: 4px;
+            border: 2px solid #8b9a84;
+            border-radius: 6px;
             font-size: 14px;
             color: #798674;
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             font-family: inherit;
             text-align: center;
+        }
+        
+        .names-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(139, 154, 132, 0.2);
         }
         
         .add-name-btn {
@@ -261,7 +343,7 @@
             background: #8b9a84;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
@@ -271,17 +353,21 @@
         }
         
         .close-btn {
-            background: none;
+            background: white;
             border: none;
-            font-size: 20px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 16px;
             color: #8b7965;
             cursor: pointer;
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 10px;
             transition: all 0.3s ease;
             display: none;
             z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .card.expanded .close-btn {
@@ -296,7 +382,7 @@
             margin-top: 16px;
             padding: 12px;
             background: rgba(139, 154, 132, 0.15);
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: 600;
         }
     </style>
@@ -307,100 +393,64 @@
             <div class="card" id="card">
                 <button class="close-btn" id="closeBtn">✕</button>
                 
-                <!-- Diseño de dos columnas (Osito y globos a la derecha) -->
-                <div class="hero-section">
-                    <div class="text-column">
-                        <div class="invitation-text">Te invitamos<br>a celebrar</div>
-                        <div class="baby-name">Emilio</div>
-                    </div>
-                    
-                    <div class="image-column">
-                        <svg class="bear-svg" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Hilos de los globos (Unidos al brazo levantado) -->
-                            <g stroke="#8b7965" stroke-width="1.5">
-                                <path d="M 60 110 Q 50 60 40 40" fill="none"/>
-                                <path d="M 60 110 Q 65 60 70 30" fill="none"/>
-                                <path d="M 60 110 Q 80 70 100 40" fill="none"/>
-                                <path d="M 60 110 Q 90 80 130 50" fill="none"/>
-                            </g>
-
-                            <!-- Globos -->
-                            <!-- Capa trasera -->
-                            <circle cx="40" cy="40" r="28" fill="#8b9a84" opacity="0.95"/> <!-- Verde salvia -->
-                            <circle cx="100" cy="40" r="25" fill="#cbbcad" opacity="0.9"/> <!-- Café taupe -->
-                            <circle cx="130" cy="50" r="20" fill="#fcf9f2" opacity="0.9"/> <!-- Blanco crema -->
-                            
-                            <!-- Capa frontal -->
-                            <circle cx="70" cy="30" r="32" fill="#e5d5c8" opacity="0.95"/> <!-- Beige claro -->
-                            <circle cx="110" cy="65" r="22" fill="#8b9a84" opacity="0.95"/> <!-- Verde salvia pequeño -->
-                            <circle cx="50" cy="70" r="18" fill="#fcf9f2" opacity="0.95"/> <!-- Blanco crema pequeño -->
-                            <circle cx="85" cy="75" r="26" fill="#cbbcad" opacity="0.95"/> <!-- Café taupe frontal -->
-
-                            <!-- OSITO -->
-                            <!-- Orejas -->
-                            <circle cx="55" cy="120" r="14" fill="#cbbcad"/>
-                            <circle cx="105" cy="120" r="14" fill="#cbbcad"/>
-                            <circle cx="55" cy="120" r="8" fill="#e5d5c8"/>
-                            <circle cx="105" cy="120" r="8" fill="#e5d5c8"/>
-                            
-                            <!-- Cabeza -->
-                            <circle cx="80" cy="145" r="35" fill="#cbbcad"/>
-                            
-                            <!-- Cuerpo -->
-                            <ellipse cx="85" cy="195" rx="30" ry="35" fill="#cbbcad"/>
-                            
-                            <!-- Barriga -->
-                            <ellipse cx="85" cy="200" rx="18" ry="22" fill="#e5d5c8"/>
-                            
-                            <!-- Brazo Izquierdo (Levantado sosteniendo globos) -->
-                            <ellipse cx="55" cy="125" rx="10" ry="25" fill="#cbbcad" transform="rotate(30 55 125)"/>
-                            <!-- Brazo Derecho (Relajado) -->
-                            <ellipse cx="115" cy="190" rx="10" ry="20" fill="#cbbcad" transform="rotate(-20 115 190)"/>
-                            
-                            <!-- Ojos -->
-                            <circle cx="68" cy="138" r="3.5" fill="#4a4036"/>
-                            <circle cx="92" cy="138" r="3.5" fill="#4a4036"/>
-                            <circle cx="69" cy="137" r="1.5" fill="white"/>
-                            <circle cx="93" cy="137" r="1.5" fill="white"/>
-                            
-                            <!-- Hocico -->
-                            <ellipse cx="80" cy="150" rx="12" ry="9" fill="#e5d5c8"/>
-                            <!-- Nariz -->
-                            <ellipse cx="80" cy="147" rx="4" ry="3" fill="#4a4036"/>
-                            
-                            <!-- Lazo al cuello (Mismo verde salvia) -->
-                            <path d="M 80 165 L 65 175 L 68 158 Z" fill="#8b9a84"/>
-                            <path d="M 80 165 L 95 175 L 92 158 Z" fill="#8b9a84"/>
-                            <circle cx="80" cy="165" r="4" fill="#798674"/>
-
-                            <!-- Pies -->
-                            <ellipse cx="65" cy="230" rx="12" ry="9" fill="#cbbcad"/>
-                            <ellipse cx="105" cy="230" rx="12" ry="9" fill="#cbbcad"/>
-                            <ellipse cx="65" cy="228" rx="6" ry="5" fill="#e5d5c8"/>
-                            <ellipse cx="105" cy="228" rx="6" ry="5" fill="#e5d5c8"/>
-                        </svg>
-                    </div>
+                <!-- CONTENEDOR DE IMÁGENES CON TRANSICIÓN -->
+                <div class="image-transition-wrapper">
+                    <img src="invitacion1.png" class="cover-image img-1" alt="Portada Baby Shower">
+                    <img src="invitacion2.png" class="cover-image img-2" alt="Detalles Baby Shower">
                 </div>
-                
-                <div class="tap-instruction" id="tapInstruction">Pulsa aquí para confirmar asistencia</div>
 
-                <!-- Detalles y Formularios (Ocultos inicialmente) -->
+                <!-- Detalles del Evento -->
                 <div class="details-section">
-                    <div class="event-detail" style="border-top: none;">
-                        <div class="event-detail-label">Fecha</div>
-                        <div class="event-detail-value">Sábado, 8 de agosto de 2026</div>
+                    
+                    <!-- SECCIÓN DEL CONTADOR TIPO CALENDARIO -->
+                    <div class="event-detail" style="border-top: 1px solid rgba(139, 121, 101, 0.15);">
+                        <div class="event-detail-label">Faltan</div>
+                        
+                        <!-- Las hojas del calendario -->
+                        <div class="countdown-wrapper" id="calendario-digital">
+                            <div class="cd-box">
+                                <div class="cd-value" id="cd-dias">00</div>
+                                <div class="cd-label">Días</div>
+                            </div>
+                            <div class="cd-box">
+                                <div class="cd-value" id="cd-horas">00</div>
+                                <div class="cd-label">Hrs</div>
+                            </div>
+                            <div class="cd-box">
+                                <div class="cd-value" id="cd-minutos">00</div>
+                                <div class="cd-label">Min</div>
+                            </div>
+                            <div class="cd-box">
+                                <div class="cd-value" id="cd-segundos">00</div>
+                                <div class="cd-label">Seg</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Mensaje cuando llega a cero -->
+                        <div class="cd-mensaje-final" id="mensaje-final">
+                            ¡El baby shower es hoy! 👶✨
+                        </div>
                     </div>
                     
                     <div class="event-detail">
                         <div class="event-detail-label">Ubicación</div>
-                        <div class="event-detail-value normal-text">Parque Señor de Burgos</div>
-                        <div class="location-note" style="margin-top: 4px;">Federico Sánchez y Calle SN</div>
-                        <div class="location-note">🚗 Dejar los carros en el parque<br/>📹 Cámaras de vigilancia propias</div>
-                    </div>
-                    
-                    <div class="event-detail" style="border-bottom: none;">
-                        <div class="event-detail-label">✨ Baby Shower de Hombre</div>
-                        <div class="event-detail-value normal-text" style="color: #8b7965; font-weight: normal;">¡Un momento especial en familia!</div>
+                        
+                        <!-- CAMBIO DE TÍTULO AQUÍ -->
+                         <div class="event-detail-value">Parque Señor de Burgos</div>
+                        <div class="event-detail-value">Condominio San Francisco</div>
+                        
+                        <div class="location-note">Federico Sánchez y Calle SN</div>
+
+                        <!-- MAPA INTERACTIVO CON BORDE VERDE -->
+                        <div class="map-wrapper">
+                            <iframe 
+                                src="https://maps.google.com/maps?q=Parque+Se%C3%B1or+de+Burgos,+Cuenca,+Ecuador&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                                allowfullscreen="" 
+                                loading="lazy">
+                            </iframe>
+                        </div>
+
+                        <div class="location-note">📍Llega hasta el tope de la calle, vas ver un muro de ladrillos <br/>🚗 Deja tu vehiculo en el parqueadero del parque<br/>📹 Tenemos cámaras de vigilancia propias 24/7<br/>📞Llamanos a Vivi o Cristo, estaremos pendientes a tu llegada</div>
                     </div>
                 </div>
                 
@@ -408,7 +458,7 @@
                 <div class="step-section" id="step1" style="display: none;">
                     <label class="input-label">¿Cuál es tu nombre?</label>
                     <input type="text" class="names-input" id="guestNameInput" placeholder="Tu nombre completo">
-                    <button class="add-name-btn" id="nextStep1Btn" style="margin-top: 16px;">Continuar</button>
+                    <button class="add-name-btn" id="nextStep1Btn" style="margin-top: 12px;">Continuar</button>
                 </div>
                 
                 <!-- PASO 2: Confirmación de asistencia -->
@@ -426,11 +476,10 @@
     </div>
 
     <script>
-        const SCRIPT_URL = 'PEGA_AQUÍ_TU_URL_DE_APPS_SCRIPT'; // <--- Reemplaza esto con tu URL real
+        const SCRIPT_URL = 'PEGA_AQUÍ_TU_URL_DE_APPS_SCRIPT'; // <--- URL de Google Sheets
 
         const card = document.getElementById('card');
         const closeBtn = document.getElementById('closeBtn');
-        const tapInstruction = document.getElementById('tapInstruction');
         const step1 = document.getElementById('step1');
         const guestNameInput = document.getElementById('guestNameInput');
         const nextStep1Btn = document.getElementById('nextStep1Btn');
@@ -448,6 +497,34 @@
             guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('emilio-shower-guest-id', guestId);
         }
+        
+        // --- LÓGICA DEL CONTADOR REGRESIVO CALENDARIO ---
+        const fechaObjetivo = new Date("August 8, 2026 15:30:00").getTime();
+        
+        const intervalo = setInterval(function() {
+            const ahora = new Date().getTime();
+            const distancia = fechaObjetivo - ahora;
+            
+            if (distancia < 0) {
+                clearInterval(intervalo);
+                document.getElementById("calendario-digital").style.display = "none";
+                document.getElementById("mensaje-final").style.display = "block";
+                return;
+            }
+            
+            const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+            
+            const formatoDosDigitos = num => num < 10 ? "0" + num : num;
+            
+            document.getElementById("cd-dias").innerText = formatoDosDigitos(dias);
+            document.getElementById("cd-horas").innerText = formatoDosDigitos(horas);
+            document.getElementById("cd-minutos").innerText = formatoDosDigitos(minutos);
+            document.getElementById("cd-segundos").innerText = formatoDosDigitos(segundos);
+            
+        }, 1000);
         
         function loadData() {
             try {
@@ -501,14 +578,12 @@
         function showStep1() {
             step1.style.display = 'block';
             step2.style.display = 'none';
-            tapInstruction.style.display = 'none';
-            guestNameInput.focus();
+            setTimeout(() => guestNameInput.focus(), 300);
         }
         
         function showStep2() {
             step1.style.display = 'none';
             step2.style.display = 'block';
-            tapInstruction.style.display = 'none';
         }
         
         card.addEventListener('click', function(e) {
@@ -517,8 +592,6 @@
                 card.classList.add('expanded');
                 if (!guestName) {
                     showStep1();
-                } else {
-                    tapInstruction.style.display = 'none';
                 }
             }
         });
@@ -527,9 +600,6 @@
             e.stopPropagation();
             isExpanded = false;
             card.classList.remove('expanded');
-            if(!guestName) {
-                tapInstruction.style.display = 'block';
-            }
         });
         
         nextStep1Btn.addEventListener('click', function(e) {
