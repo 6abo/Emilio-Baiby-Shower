@@ -19,15 +19,11 @@
         body {
             font-family: 'Quicksand', sans-serif;
             background-color: #f8f6f2; 
-            
-            /* --- AQUÍ VA TU IMAGEN DE FONDO DE PANTALLA --- */
             background-image: url('fondo.png'); 
-            
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed; 
-            
             min-height: 100vh;
             padding: 20px 15px; 
             display: flex;
@@ -35,7 +31,6 @@
             justify-content: center;
         }
         
-        /* EL NUEVO CONTENEDOR CON COLOR CREMA DE INVITACION2 */
         .container {
             width: 100%;
             max-width: 540px;
@@ -50,7 +45,7 @@
         }
         
         .card-container {
-            perspective: 1200px; /* Profundidad 3D para toda la tarjeta */
+            perspective: 1200px; 
             width: 100%;
         }
         
@@ -78,7 +73,6 @@
             padding-bottom: 25px;
         }
 
-        /* CONTENEDOR PARA LA TRANSICIÓN 3D */
         .image-transition-wrapper {
             position: relative;
             width: 100%;
@@ -88,7 +82,7 @@
             margin: 0 auto;
             overflow: hidden; 
             -webkit-mask-image: -webkit-radial-gradient(white, black);
-            perspective: 1000px; /* Esto permite el efecto de doblez 3D en las imágenes */
+            perspective: 1000px; 
         }
 
         .card.expanded .image-transition-wrapper {
@@ -101,47 +95,42 @@
             width: 100%;
             height: auto;
             display: block;
-            /* Transición más larga y suave para el doblez del sobre */
             transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); 
         }
 
-        /* IMAGEN 1: La portada que se abre como solapa */
         .img-1 { 
             opacity: 1; 
-            transform-origin: top center; /* El doblez ocurre en la parte superior */
+            transform-origin: top center; 
             transform: rotateX(0deg);
             position: relative;
             z-index: 2;
         }
 
-        /* IMAGEN 2: Los detalles que salen desde abajo/adentro */
         .img-2 {
             position: absolute;
             top: 0;
             left: 0;
             opacity: 0;
-            transform: translateY(30px) scale(0.9); /* Posicionada más abajo y pequeña */
+            transform: translateY(30px) scale(0.9); 
             z-index: 1;
         }
 
-        /* AL EXPANDIR (EFECTO SOBRE ABIERTO) */
         .card.expanded .img-1 { 
             opacity: 0; 
-            transform: rotateX(100deg); /* Se dobla hacia atrás/arriba */
-            transition-duration: 0.6s; /* Desaparece un poco más rápido */
+            transform: rotateX(100deg); 
+            transition-duration: 0.6s; 
         }
         
         .card.expanded .img-2 { 
             opacity: 1; 
-            transform: translateY(0) scale(1); /* Sube a su posición final */
+            transform: translateY(0) scale(1); 
         }
         
-        /* Detalles del evento */
         .details-section {
             display: none;
             text-align: center;
             width: 100%;
-            animation: slideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; /* Misma animación del sobre */
+            animation: slideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
             padding-top: 0px; 
         }
         
@@ -178,7 +167,6 @@
             font-weight: 600;
         }
 
-        /* --- ESTILOS DEL NUEVO CONTADOR DIGITAL TIPO CALENDARIO --- */
         .countdown-wrapper {
             display: flex;
             justify-content: center;
@@ -254,7 +242,6 @@
             letter-spacing: 1px;
         }
 
-        /* --- ESTILOS DEL MAPA GOOGLE --- */
         .map-wrapper {
             margin-top: 15px;
             margin-bottom: 12px;
@@ -273,7 +260,6 @@
             border: none;
             display: block;
         }
-        /* -------------------------------------------------------- */
         
         .location-note {
             font-size: 11px;
@@ -282,7 +268,6 @@
             line-height: 1.4;
         }
         
-        /* Formularios y Botones */
         .step-section {
             margin-top: 15px;
             text-align: center;
@@ -308,7 +293,7 @@
             padding: 12px;
             border: none;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px; /* Reducido levemente para que los dos botones quepan perfecto */
             font-weight: 600;
             font-family: 'Quicksand', sans-serif;
             cursor: pointer;
@@ -396,15 +381,17 @@
         }
         
         .success-message {
-            display: none;
+            display: block;
             text-align: center;
             color: #798674;
-            font-size: 14px;
-            margin-top: 16px;
-            padding: 12px;
+            font-size: 15px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding: 15px 12px;
             background: rgba(139, 154, 132, 0.15);
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 600;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -414,40 +401,23 @@
             <div class="card" id="card">
                 <button class="close-btn" id="closeBtn">✕</button>
                 
-                <!-- CONTENEDOR DE IMÁGENES CON TRANSICIÓN -->
                 <div class="image-transition-wrapper">
                     <img src="invitacion1.png" class="cover-image img-1" alt="Portada Baby Shower">
                     <img src="invitacion2.png" class="cover-image img-2" alt="Detalles Baby Shower">
                 </div>
 
-                <!-- Detalles del Evento -->
                 <div class="details-section">
                     
-                    <!-- SECCIÓN DEL CONTADOR TIPO CALENDARIO -->
                     <div class="event-detail" style="border-top: 1px solid rgba(139, 121, 101, 0.15);">
                         <div class="event-detail-label">Faltan</div>
                         
-                        <!-- Las hojas del calendario -->
                         <div class="countdown-wrapper" id="calendario-digital">
-                            <div class="cd-box">
-                                <div class="cd-value" id="cd-dias">00</div>
-                                <div class="cd-label">Días</div>
-                            </div>
-                            <div class="cd-box">
-                                <div class="cd-value" id="cd-horas">00</div>
-                                <div class="cd-label">Hrs</div>
-                            </div>
-                            <div class="cd-box">
-                                <div class="cd-value" id="cd-minutos">00</div>
-                                <div class="cd-label">Min</div>
-                            </div>
-                            <div class="cd-box">
-                                <div class="cd-value" id="cd-segundos">00</div>
-                                <div class="cd-label">Seg</div>
-                            </div>
+                            <div class="cd-box"><div class="cd-value" id="cd-dias">00</div><div class="cd-label">Días</div></div>
+                            <div class="cd-box"><div class="cd-value" id="cd-horas">00</div><div class="cd-label">Hrs</div></div>
+                            <div class="cd-box"><div class="cd-value" id="cd-minutos">00</div><div class="cd-label">Min</div></div>
+                            <div class="cd-box"><div class="cd-value" id="cd-segundos">00</div><div class="cd-label">Seg</div></div>
                         </div>
                         
-                        <!-- Mensaje cuando llega a cero -->
                         <div class="cd-mensaje-final" id="mensaje-final">
                             ¡El baby shower es hoy! 👶✨
                         </div>
@@ -489,15 +459,23 @@
                         <button class="btn btn-yes" id="btnYes">Sí, iré</button>
                         <button class="btn btn-no" id="btnNo">No puedo</button>
                     </div>
-                    
-                    <div class="success-message" id="successMessage"></div>
                 </div>
+
+                <!-- PASO 3: Mensaje Final y Editar (NUEVO) -->
+                <div class="step-section" id="step3" style="display: none;">
+                    <div class="success-message" id="finalMessage"></div>
+                    <div class="button-group">
+                        <button class="btn btn-no" id="btnEditName">Editar nombre</button>
+                        <button class="btn btn-no" id="btnEditDecision">Editar decisión</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwh7f2wqGOaUSZTis-U1TZ0h3I1X7i_1Zu2uG55kXU5l1buRYXNvFIW7D5qKWcTk4OM/exec'; // <--- URL de Google Sheets
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI52UfdivTJrhDxl3jMC4ysAgi6wwTqixB7elmCFCrAJskXrfb44k1-hfmAyBny0pZ/exec'; // <--- URL de Google Sheets
 
         const card = document.getElementById('card');
         const closeBtn = document.getElementById('closeBtn');
@@ -507,11 +485,15 @@
         const step2 = document.getElementById('step2');
         const btnYes = document.getElementById('btnYes');
         const btnNo = document.getElementById('btnNo');
-        const successMessage = document.getElementById('successMessage');
+        const step3 = document.getElementById('step3');
+        const finalMessage = document.getElementById('finalMessage');
+        const btnEditName = document.getElementById('btnEditName');
+        const btnEditDecision = document.getElementById('btnEditDecision');
         
         let isExpanded = false;
         let guestName = '';
         let isAttending = false;
+        let hasResponded = false; 
         
         let guestId = localStorage.getItem('emilio-shower-guest-id');
         if (!guestId) {
@@ -554,12 +536,7 @@
                     const parsed = JSON.parse(data);
                     guestName = parsed.guestName || '';
                     isAttending = parsed.isAttending || false;
-                    
-                    if (guestName) {
-                        showStep2();
-                        successMessage.innerText = '✓ ¡Gracias por confirmar tu asistencia!';
-                        successMessage.style.display = 'block';
-                    }
+                    hasResponded = parsed.hasResponded || false;
                 }
             } catch (e) {}
         }
@@ -568,28 +545,28 @@
             btnYes.disabled = true;
             btnNo.disabled = true;
             
+            hasResponded = true; 
+            
             try {
                 const data = {
                     guestId: guestId,
                     guestName: guestName,
                     timestamp: new Date().toISOString(),
-                    isAttending: isAttending
+                    isAttending: isAttending,
+                    hasResponded: hasResponded
                 };
                 
                 localStorage.setItem('emilio-shower-response-' + guestId, JSON.stringify(data));
+                
+                showStep3(); 
                 
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify(data)
                 });
                 
-                successMessage.innerText = '✓ ¡Gracias por confirmar tu asistencia!';
-                successMessage.style.display = 'block';
-                
             } catch (e) {
                 console.log('Error de conexión:', e);
-                successMessage.innerText = '✓ Guardado (hubo un problema de red, pero lo intentaremos de nuevo)';
-                successMessage.style.display = 'block';
             } finally {
                 btnYes.disabled = false;
                 btnNo.disabled = false;
@@ -599,19 +576,35 @@
         function showStep1() {
             step1.style.display = 'block';
             step2.style.display = 'none';
+            step3.style.display = 'none';
             setTimeout(() => guestNameInput.focus(), 300);
         }
         
         function showStep2() {
             step1.style.display = 'none';
             step2.style.display = 'block';
+            step3.style.display = 'none';
+        }
+
+        function showStep3() {
+            step1.style.display = 'none';
+            step2.style.display = 'none';
+            step3.style.display = 'block';
+            
+            const textoRespuesta = isAttending ? "Sí, iré 🎉" : "No puedo 😢";
+            finalMessage.innerHTML = `¡Gracias por confirmar, <strong>${guestName}</strong>!<br><span style="font-size: 13px; font-weight: normal; color: #8b7965; margin-top: 6px; display: block;">Tu respuesta actual: ${textoRespuesta}</span>`;
         }
         
         card.addEventListener('click', function(e) {
             if (!isExpanded && !e.target.closest('.btn') && !e.target.closest('input') && !e.target.closest('.add-name-btn') && e.target !== closeBtn) {
                 isExpanded = true;
                 card.classList.add('expanded');
-                if (!guestName) {
+                
+                if (hasResponded) {
+                    showStep3();
+                } else if (guestName) {
+                    showStep2();
+                } else {
                     showStep1();
                 }
             }
@@ -646,6 +639,18 @@
             e.stopPropagation();
             isAttending = false;
             saveData();
+        });
+
+        // NUEVOS BOTONES DE EDICIÓN
+        btnEditDecision.addEventListener('click', function(e) {
+            e.stopPropagation();
+            showStep2(); // Vuelve a mostrar los botones de Sí/No
+        });
+
+        btnEditName.addEventListener('click', function(e) {
+            e.stopPropagation();
+            guestNameInput.value = guestName; // Autocompleta con el nombre guardado
+            showStep1(); // Regresa al paso de ingresar el nombre
         });
         
         loadData();
